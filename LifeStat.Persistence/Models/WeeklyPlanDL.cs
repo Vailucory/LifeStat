@@ -13,9 +13,9 @@ public class WeeklyPlanDL
     public PlanFulfillmentStatus FulfillmentStatus { get; set; }
 
     #region Navigation Properties
-    public UserDL User { get; set; } = new();
+    public UserDL? User { get; set; } = new();
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public int WeeklyPlanTemplateId { get; set; }
 

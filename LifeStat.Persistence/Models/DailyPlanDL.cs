@@ -13,15 +13,15 @@ public class DailyPlanDL
     public PlanFulfillmentStatus FulfillmentStatus { get; set; }
 
     #region Navigation Properties
-    public UserDL User { get; set; } = new();
+    public UserDL? User { get; set; } = new();
 
-    public int UserId { get; set; }
+    public int? UserId { get; set; }
 
     public int DailyPlanTemplateId { get; set; }
 
-    public WeeklyPlanDL WeeklyPlan { get; set; } = new();
+    public WeeklyPlanDL? WeeklyPlan { get; set; } = new();
 
-    public int WeeklyPlanId { get; set; }
+    public int? WeeklyPlanId { get; set; }
 
     #endregion
 }
