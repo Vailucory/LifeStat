@@ -3,13 +3,13 @@
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IActivityTemplateRepository
 {
-    Task AddAsync(ActivityTemplate activityTemplate);
+    void Add(ActivityTemplate activityTemplate);
 
     Task<ActivityTemplate> GetByIdAsync(int id);
 
     Task<ActivityTemplate> GetByIdWithActivitiesAsync(int id);
 
-    Task UpdateAsync(ActivityTemplate activityTemplate);
+    void Update(ActivityTemplate activityTemplate);
 
-    Task RemoveAsync(ActivityTemplate activityTemplate);
+    void Remove(ActivityTemplate activityTemplate);
 }

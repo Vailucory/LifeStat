@@ -3,13 +3,13 @@
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IDailyPlanActivityDurationRepository
 {
-    Task AddAsync(DailyPlanActivityDuration dailyPlanActivityDuration);
+    void Add(DailyPlanActivityDuration dailyPlanActivityDuration);
 
-    Task AddRangeAsync(IEnumerable<DailyPlanActivityDuration> dailyPlanActivityDurations);
+    void AddRange(IEnumerable<DailyPlanActivityDuration> dailyPlanActivityDurations);
 
     Task<DailyPlanActivityDuration> GetByIdAsync(int id);
 
-    Task UpdateAsync(DailyPlanActivityDuration dailyPlanActivityDuration);
+    void Update(DailyPlanActivityDuration dailyPlanActivityDuration);
 
-    Task RemoveAsync(DailyPlanActivityDuration dailyPlanActivityDuration);
+    void Remove(DailyPlanActivityDuration dailyPlanActivityDuration);
 }

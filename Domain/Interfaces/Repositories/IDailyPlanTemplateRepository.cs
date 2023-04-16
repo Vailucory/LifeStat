@@ -3,7 +3,7 @@
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IDailyPlanTemplateRepository
 {
-    Task AddAsync(DailyPlanTemplate dailyPlanTemplate);
+    void Add(DailyPlanTemplate dailyPlanTemplate);
 
     Task<DailyPlanTemplate> GetByIdAsync(int id);
 
@@ -11,7 +11,7 @@ public interface IDailyPlanTemplateRepository
 
     Task<DailyPlanTemplate> GetByIdWithActivityDurationsAsync(int id);
 
-    Task UpdateAsync(DailyPlanTemplate dailyPlanTemplate);
+    void Update(DailyPlanTemplate dailyPlanTemplate);
 
-    Task RemoveAsync(DailyPlanTemplate dailyPlanTemplate);
+    void Remove(DailyPlanTemplate dailyPlanTemplate);
 }

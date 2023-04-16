@@ -3,14 +3,14 @@
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IWeeklyPlanRepository
 {
-    Task AddAsync(WeeklyPlan weeklyPlan);
+    void Add(WeeklyPlan weeklyPlan);
 
     Task<WeeklyPlan> GetByIdAsync(int id);
 
     Task<WeeklyPlan> GetByIdWithDailyPlansAsync(int id);
 
-    Task UpdateAsync(WeeklyPlan weeklyPlan);
+    void Update(WeeklyPlan weeklyPlan);
 
-    Task RemoveAsync(WeeklyPlan weeklyPlan);
+    void Remove(WeeklyPlan weeklyPlan);
 }
 

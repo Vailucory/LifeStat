@@ -3,11 +3,11 @@
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IActivityRepository
 {
-    Task AddAsync(Activity activity);
+    void Add(Activity activity);
 
     Task<Activity> GetByIdAsync(int id);
 
-    Task UpdateAsync(Activity activity);
+    void Update(Activity activity);
 
-    Task RemoveAsync(Activity activity);
+    void Remove(Activity activity);
 }
