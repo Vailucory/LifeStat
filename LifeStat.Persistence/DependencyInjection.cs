@@ -1,4 +1,5 @@
 ﻿using LifeStat.Domain.Interfaces.Repositories;
+using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,8 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IWeeklyPlanTemplateRepository), typeof(WeeklyPlanTemplateRepository));
         #endregion
+
+        services.AddScoped(typeof(IUnitOfWork), typeof(UnitOfWork));
 
         return services;
     }
