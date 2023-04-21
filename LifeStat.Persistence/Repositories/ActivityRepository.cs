@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Persistence.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 
 namespace LifeStat.Persistence.Repositories;
 public class ActivityRepository : IActivityRepository
@@ -10,20 +13,57 @@ public class ActivityRepository : IActivityRepository
 
     private readonly IMapper _mapper;
 
-    public ActivityRepository(ApplicationDbContext context, IMapper mapper)
+    private readonly IUserRepository _userRepository;
+
+    public ActivityRepository(
+        ApplicationDbContext context, 
+        IMapper mapper, 
+        IUserRepository userRepository)
     {
         _context = context;
         _mapper = mapper;
+        _userRepository = userRepository;
     }
 
-    public void Add(Activity activity)
+    public void Add(Activity activity, int userId)
     {
-        _context.Activities.Add(_mapper.Map<ActivityDL>(activity));
+        (_context.Users
+            .FirstOrDefault(u => u.Id == userId)
+            ?.Activities
+            ?? throw new EntityNotFoundException(userId, typeof(User)))
+            .Add(_mapper.Map<ActivityDL>(activity));
     }
 
     public async Task<Activity> GetByIdAsync(int id)
     {
-        return _mapper.Map<Activity>(await _context.Activities.FindAsync(id));
+        return _mapper.Map<Activity>(await _context.Activities
+            .FindAsync(id))
+            ?? throw new EntityNotFoundException(id, typeof(Activity));
+    }
+
+    public async Task<List<Activity>> GetAllUserActivitiesAsync(int userId)
+    {
+        return _mapper.Map<List<Activity>>(await _context.Activities
+            .Where(a => a.UserId == userId)
+            .ToListAsync());
+    }
+
+    public async Task<List<Activity>> GetAllUserActivitiesFromTimeAsync(int userId, DateTime fromTime)
+    {
+        var activities = _mapper.Map<List<Activity>>(await _context
+            .Activities
+            .Where(a => a.UserId == userId && a.StartTimeLocal >= fromTime)
+            .ToListAsync());
+
+        return activities;
+    }
+
+    public async Task<List<Activity>> GetActivitiesByTemplateIdAsync(int templateId) 
+    {
+        return _mapper.Map<List<Activity>>(await _context
+            .Activities
+            .Where(a => a.ActivityTemplateId == templateId)
+            .ToListAsync());
     }
 
     public void Remove(Activity activity)

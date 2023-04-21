@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +25,9 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetByIdAsync(int id)
     {
-        return _mapper.Map<User>(await _context.Users.FindAsync(id));
+        return _mapper.Map<User>(await _context.Users
+            .FindAsync(id)
+            ?? throw new EntityNotFoundException(id, typeof(User)));
     }
 
     public async Task<User> GetByIdWithActivitiesAsync(int id)
@@ -32,7 +35,8 @@ public class UserRepository : IUserRepository
         return _mapper.Map<User>(await _context
             .Users
             .Include(u => u.Activities)
-            .FirstOrDefaultAsync(u => u.Id == id));
+            .FirstOrDefaultAsync(u => u.Id == id)
+            ?? throw new EntityNotFoundException(id, typeof(User)));
     }
 
     public async Task<User> GetByIdWithPlansAsync(int id)
@@ -41,7 +45,8 @@ public class UserRepository : IUserRepository
             .Users
             .Include(u => u.DailyPlans)
             .Include(u => u.WeeklyPlans)
-            .FirstOrDefaultAsync(u => u.Id == id));
+            .FirstOrDefaultAsync(u => u.Id == id)
+            ?? throw new EntityNotFoundException(id, typeof(User)));
     }
 
     public async Task<User> GetByIdWithTemplatesAsync(int id)
@@ -51,7 +56,8 @@ public class UserRepository : IUserRepository
             .Include(u => u.ActivityTemplates)
             .Include(u => u.DailyPlanTemplates)
             .Include(u => u.WeeklyPlanTemplates)
-            .FirstOrDefaultAsync(u => u.Id == id));
+            .FirstOrDefaultAsync(u => u.Id == id)
+            ?? throw new EntityNotFoundException(id, typeof(User)));
     }
 
     public void Remove(User user)

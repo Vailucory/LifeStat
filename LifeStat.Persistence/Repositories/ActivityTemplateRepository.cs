@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,16 +18,21 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
         _mapper = mapper;
     }
 
-    public void Add(ActivityTemplate activityTemplate)
+    public void Add(ActivityTemplate activityTemplate, int userId)
     {
-        _context.ActivityTemplates.Add(_mapper.Map<ActivityTemplateDL>(activityTemplate));
+        (_context.Users
+            .FirstOrDefault(u => u.Id == userId)
+            ?.ActivityTemplates
+            ?? throw new EntityNotFoundException(userId, typeof(User)))
+            .Add(_mapper.Map<ActivityTemplateDL>(activityTemplate));
     }
 
     public async Task<ActivityTemplate> GetByIdAsync(int id)
     {
         return _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
-            .FindAsync(id));
+            .FindAsync(id))
+            ?? throw new EntityNotFoundException(id, typeof(ActivityTemplate));
     }
 
     public async Task<ActivityTemplate> GetByIdWithActivitiesAsync(int id)
@@ -34,7 +40,16 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
         return _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
             .Include(at => at.Activities)
-            .FirstOrDefaultAsync(at => at.Id == id));
+            .FirstOrDefaultAsync(at => at.Id == id))
+            ?? throw new EntityNotFoundException(id, typeof(ActivityTemplate));
+    }
+
+    public async Task<List<ActivityTemplate>> GetAllUserActivityTemplatesAsync(int userId)
+    {
+        return _mapper.Map<List<ActivityTemplate>>(await _context
+            .ActivityTemplates
+            .Where(at => at.UserId == userId)
+            .ToListAsync());
     }
 
     public void Remove(ActivityTemplate activityTemplate)

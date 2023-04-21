@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
+using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
@@ -17,14 +18,21 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
         _mapper = mapper;
     }
 
-    public void Add(WeeklyPlanTemplate weeklyPlanTemplate)
+    public void Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId)
     {
-        _context.WeeklyPlanTemplates.Add(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+        (_context.Users
+            .FirstOrDefault(u => u.Id == userId)
+            ?.WeeklyPlanTemplates
+            ?? throw new EntityNotFoundException(userId, typeof(User)))
+            .Add(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+        ;
     }
 
     public async Task<WeeklyPlanTemplate> GetByIdAsync(int id)
     {
-        return _mapper.Map<WeeklyPlanTemplate>(await _context.WeeklyPlanTemplates.FindAsync(id));
+        return _mapper.Map<WeeklyPlanTemplate>(await _context.WeeklyPlanTemplates
+            .FindAsync(id))
+            ?? throw new EntityNotFoundException(id, typeof(WeeklyPlanTemplate));
     }
 
     public async Task<WeeklyPlanTemplate> GetByIdWithDailyPlanTemplatesAsync(int id)
@@ -32,7 +40,17 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
         return _mapper.Map<WeeklyPlanTemplate>(await _context
             .WeeklyPlanTemplates
             .Include(wpt => wpt.DailyPlansTemplates)
-            .FirstOrDefaultAsync(wpt => wpt.Id == id));
+            .FirstOrDefaultAsync(wpt => wpt.Id == id))
+            ?? throw new EntityNotFoundException(id, typeof(WeeklyPlanTemplate));
+    }
+
+
+    public async Task<List<WeeklyPlanTemplate>> GetAllUserWeeklyPlanTemplatesAsync(int userId)
+    {
+        return _mapper.Map<List<WeeklyPlanTemplate>>(await _context
+            .WeeklyPlanTemplates
+            .Where(wpt => wpt.UserId == userId)
+            .ToListAsync());
     }
 
     public void Remove(WeeklyPlanTemplate weeklyPlanTemplate)

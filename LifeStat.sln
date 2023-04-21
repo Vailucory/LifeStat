@@ -5,7 +5,9 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Domain", "Domain\LifeStat.Domain.csproj", "{50CEC595-B7AB-406B-AEEE-29277866753F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifeStat.Persistence", "LifeStat.Persistence\LifeStat.Persistence.csproj", "{5DA92FC6-076D-46A8-9177-EDA306B6106B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Persistence", "LifeStat.Persistence\LifeStat.Persistence.csproj", "{5DA92FC6-076D-46A8-9177-EDA306B6106B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifeStat.Application", "LifeStat.Application\LifeStat.Application.csproj", "{BFB625AC-7F51-466B-83B6-45D57883DEDF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5DA92FC6-076D-46A8-9177-EDA306B6106B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DA92FC6-076D-46A8-9177-EDA306B6106B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DA92FC6-076D-46A8-9177-EDA306B6106B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
