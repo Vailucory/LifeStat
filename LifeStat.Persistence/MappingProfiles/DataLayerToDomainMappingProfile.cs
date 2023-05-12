@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models;
-using LifeStat.Persistence.Models;
+using LifeStat.Infrastructure.Persistence.Models;
 
 namespace LifeStat.Persistence.MappingProfiles;
 internal class DataLayerToDomainMappingProfile : Profile

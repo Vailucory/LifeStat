@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using LifeStat.Persistence.Models;
 using MediatR;
 
 namespace LifeStat.Application.UseCases.DailyPlans.Commands.CreateDailyPlan;
