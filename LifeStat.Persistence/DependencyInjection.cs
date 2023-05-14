@@ -49,8 +49,6 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IDailyPlanTemplateRepository), typeof(DailyPlanTemplateRepository));
 
-        services.AddScoped(typeof(IUserRepository), typeof(UserRepository));
-
         services.AddScoped(typeof(IWeeklyPlanRepository), typeof(WeeklyPlanRepository));
 
         services.AddScoped(typeof(IWeeklyPlanTemplateRepository), typeof(WeeklyPlanTemplateRepository));
