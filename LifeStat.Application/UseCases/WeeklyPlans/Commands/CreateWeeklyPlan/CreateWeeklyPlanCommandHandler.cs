@@ -1,15 +1,11 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.WeeklyPlans.Commands.CreateWeeklyPlan;
-public class CreateWeeklyPlanCommandHandler : IRequestHandler<CreateWeeklyPlanCommand>
+public class CreateWeeklyPlanCommandHandler : ICommandHandler<CreateWeeklyPlanCommand>
 {
     private readonly IWeeklyPlanRepository _weeklyPlanRepository;
 
@@ -21,7 +17,7 @@ public class CreateWeeklyPlanCommandHandler : IRequestHandler<CreateWeeklyPlanCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(CreateWeeklyPlanCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateWeeklyPlanCommand request, CancellationToken cancellationToken)
     {
         var weeklyPlan = new WeeklyPlan()
         {
@@ -29,8 +25,7 @@ public class CreateWeeklyPlanCommandHandler : IRequestHandler<CreateWeeklyPlanCo
             FulfillmentStatus = request.FulfillmentStatus, 
         };
 
-        _weeklyPlanRepository.Add(weeklyPlan, request.UserId);
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return _weeklyPlanRepository.Add(weeklyPlan, request.UserId)
+            .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

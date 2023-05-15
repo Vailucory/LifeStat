@@ -1,17 +1,18 @@
 ﻿using Domain.Models;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IWeeklyPlanTemplateRepository
 {
-    void Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId);
+    Result Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId);
 
-    Task<WeeklyPlanTemplate> GetByIdAsync(int id);
+    Task<Result<WeeklyPlanTemplate>> GetByIdAsync(int id);
 
-    Task<WeeklyPlanTemplate> GetByIdWithDailyPlanTemplatesAsync(int id);
+    Task<Result<WeeklyPlanTemplate>> GetByIdWithDailyPlanTemplatesAsync(int id);
 
-    Task<List<WeeklyPlanTemplate>> GetAllUserWeeklyPlanTemplatesAsync(int userId);
+    Task<Result<List<WeeklyPlanTemplate>>> GetAllUserWeeklyPlanTemplatesAsync(int userId);
 
-    void Update(WeeklyPlanTemplate weeklyPlanTemplate);
+    Result Update(WeeklyPlanTemplate weeklyPlanTemplate);
 
-    void Remove(WeeklyPlanTemplate weeklyPlanTemplate);
+    Result Remove(WeeklyPlanTemplate weeklyPlanTemplate);
 }

@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Commands.CreateUser;
-public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid?>
+public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Guid?
         _identityService = identityService;
     }
 
-    public async Task<Guid?> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result<Guid>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.CreateUserAsync(
             request.UserName,

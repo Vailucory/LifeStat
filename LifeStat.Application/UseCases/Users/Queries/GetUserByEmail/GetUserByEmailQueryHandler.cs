@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Queries.GetUserByEmail;
-public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery, UserViewModel?>
+public class GetUserByEmailQueryHandler : IQueryHandler<GetUserByEmailQuery, UserViewModel>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery, U
         _identityService = identityService;
     }
 
-    public async Task<UserViewModel?> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserViewModel>> Handle(GetUserByEmailQuery request, CancellationToken cancellationToken)
     {
         return await _identityService.GetUser(request.Email);
     }

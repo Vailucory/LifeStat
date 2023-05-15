@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.Activities.Commands.CreateActivity;
 public record CreateActivityCommand(
@@ -8,6 +8,6 @@ public record CreateActivityCommand(
     DateTime EndTimeUtc,
     DateTime StartTimeLocal,
     DateTime EndTimeUtcLocal
-    ) : IRequest
+    ) : ICommand
 {
 }

@@ -1,10 +1,11 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.CreateDailyPlanTemplate;
-public class CreateDailyPlanTemplateCommandHandler : IRequestHandler<CreateDailyPlanTemplateCommand>
+public class CreateDailyPlanTemplateCommandHandler : ICommandHandler<CreateDailyPlanTemplateCommand>
 {
     private readonly IDailyPlanTemplateRepository _dailyPlanTemplateRepository;
 
@@ -16,7 +17,7 @@ public class CreateDailyPlanTemplateCommandHandler : IRequestHandler<CreateDaily
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(CreateDailyPlanTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateDailyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
         var dailyPlanTemplate = new DailyPlanTemplate()
         {
@@ -24,8 +25,7 @@ public class CreateDailyPlanTemplateCommandHandler : IRequestHandler<CreateDaily
             Activities = request.ActivityDurations
         };
 
-        _dailyPlanTemplateRepository.Add(dailyPlanTemplate, request.UserId);
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return _dailyPlanTemplateRepository.Add(dailyPlanTemplate, request.UserId)
+            .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

@@ -1,9 +1,10 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Activities.Queries.GetActivitiesByTemplateId;
-public class GetActivitiesByTemplateIdQueryHandler : IRequestHandler<GetActivitiesByTemplateIdQuery, List<Activity>>
+public class GetActivitiesByTemplateIdQueryHandler : IQueryHandler<GetActivitiesByTemplateIdQuery, List<Activity>>
 {
     private readonly IActivityRepository _activityRepository;
 
@@ -12,7 +13,7 @@ public class GetActivitiesByTemplateIdQueryHandler : IRequestHandler<GetActiviti
         _activityRepository = activityRepository;
     }
 
-    public async Task<List<Activity>> Handle(GetActivitiesByTemplateIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<Activity>>> Handle(GetActivitiesByTemplateIdQuery request, CancellationToken cancellationToken)
     {
         return await _activityRepository.GetActivitiesByTemplateIdAsync(request.TemplateId);
     }

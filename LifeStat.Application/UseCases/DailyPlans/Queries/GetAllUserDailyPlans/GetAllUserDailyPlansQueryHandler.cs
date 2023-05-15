@@ -1,9 +1,10 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.DailyPlans.Queries.GetAllUserDailyPlans;
-public class GetAllUserDailyPlansQueryHandler : IRequestHandler<GetAllUserDailyPlansQuery, List<DailyPlan>>
+public class GetAllUserDailyPlansQueryHandler : IQueryHandler<GetAllUserDailyPlansQuery, List<DailyPlan>>
 {
     private readonly IDailyPlanRepository _dailyPlanRepository;
 
@@ -12,7 +13,7 @@ public class GetAllUserDailyPlansQueryHandler : IRequestHandler<GetAllUserDailyP
         _dailyPlanRepository = dailyPlanRepository;
     }
 
-    public async Task<List<DailyPlan>> Handle(GetAllUserDailyPlansQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<DailyPlan>>> Handle(GetAllUserDailyPlansQuery request, CancellationToken cancellationToken)
     {
         return await _dailyPlanRepository.GetAllUserDailyPlansAsync(request.UserId);
     }

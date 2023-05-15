@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.UpdateDailyPlanTemplate;
-public record UpdateDailyPlanTemplateCommand(DailyPlanTemplate DailyPlanTemplate) : IRequest
+public record UpdateDailyPlanTemplateCommand(DailyPlanTemplate DailyPlanTemplate) : ICommand
 {
 }

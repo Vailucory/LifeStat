@@ -1,6 +1,8 @@
-﻿namespace LifeStat.Domain.Interfaces.UnitOfWork;
+﻿using LifeStat.Domain.Shared;
+
+namespace LifeStat.Domain.Interfaces.UnitOfWork;
 
 public interface IUnitOfWork
 {
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    public Task<Result> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -1,10 +1,10 @@
 ﻿using Domain.Enums;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.WeeklyPlans.Commands.CreateWeeklyPlan;
 public record CreateWeeklyPlanCommand(
     int UserId,
     int WeeklyPlanTemplateId,
-    PlanFulfillmentStatus FulfillmentStatus) : IRequest
+    PlanFulfillmentStatus FulfillmentStatus) : ICommand
 {
 }

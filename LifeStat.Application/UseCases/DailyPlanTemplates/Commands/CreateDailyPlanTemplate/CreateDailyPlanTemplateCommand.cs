@@ -1,10 +1,10 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.CreateDailyPlanTemplate;
 public record CreateDailyPlanTemplateCommand(
     int UserId, 
     string Name, 
-    List<DailyPlanActivityDuration> ActivityDurations) : IRequest
+    List<DailyPlanActivityDuration> ActivityDurations) : ICommand
 {
 }

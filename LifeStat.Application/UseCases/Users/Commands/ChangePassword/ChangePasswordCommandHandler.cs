@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Commands.ChangePassword;
-public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand, bool>
+public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordComman
         _identityService = identityService;
     }
 
-    public async Task<bool> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.ChangePasswordAsync(
             request.UserId,

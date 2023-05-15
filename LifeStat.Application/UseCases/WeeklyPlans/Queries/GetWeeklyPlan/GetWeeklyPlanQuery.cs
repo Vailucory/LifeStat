@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.WeeklyPlans.Queries.GetWeeklyPlan;
-public record GetWeeklyPlanQuery(int Id) : IRequest<WeeklyPlan>
+public record GetWeeklyPlanQuery(int Id) : IQuery<WeeklyPlan>
 {
 }

@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.Users.Commands.DeleteUser;
-public record DeleteUserCommand(Guid Id) : IRequest<bool>
+public record DeleteUserCommand(Guid Id) : ICommand
 {
 }

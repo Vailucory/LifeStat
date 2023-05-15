@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.ActivityTemplates.Queries.GetAllUserActivityTemplates;
-public record GetAllUserActivityTemplatesQuery(int UserId) : IRequest<List<ActivityTemplate>>
+public record GetAllUserActivityTemplatesQuery(int UserId) : IQuery<List<ActivityTemplate>>
 {
 }

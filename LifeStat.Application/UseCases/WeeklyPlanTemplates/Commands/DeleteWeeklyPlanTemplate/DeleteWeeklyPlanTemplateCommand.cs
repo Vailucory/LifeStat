@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.WeeklyPlanTemplates.Commands.DeleteWeeklyPlanTemplate;
-public record DeleteWeeklyPlanTemplateCommand(int Id) : IRequest
+public record DeleteWeeklyPlanTemplateCommand(int Id) : ICommand
 {
 }

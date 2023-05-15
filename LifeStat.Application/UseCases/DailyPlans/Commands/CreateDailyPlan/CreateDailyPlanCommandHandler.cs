@@ -1,10 +1,11 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.DailyPlans.Commands.CreateDailyPlan;
-public class CreateDailyPlanCommandHandler : IRequestHandler<CreateDailyPlanCommand>
+public class CreateDailyPlanCommandHandler : ICommandHandler<CreateDailyPlanCommand>
 {
     private readonly IDailyPlanRepository _dailyPlanRepository;
 
@@ -22,19 +23,18 @@ public class CreateDailyPlanCommandHandler : IRequestHandler<CreateDailyPlanComm
         _activityRepository = activityRepository;
     }
 
-    public async Task Handle(CreateDailyPlanCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateDailyPlanCommand request, CancellationToken cancellationToken)
     {
-        var activities = await _activityRepository.GetAllUserActivitiesFromTimeAsync(request.UserId, request.DailyPlanStart);
+        var activitiesResult = await _activityRepository.GetAllUserActivitiesFromTimeAsync(request.UserId, request.DailyPlanStart);
 
         var dailyPlan = new DailyPlan()
         {
             DailyPlanTemplate = new DailyPlanTemplate() { Id = request.DailyPlanTemplateId },
             FulfillmentStatus = request.FulfillmentStatus,
-            Activities = activities,
+            Activities = activitiesResult.Value,
         };
 
-        _dailyPlanRepository.Add(dailyPlan, request.UserId);
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return _dailyPlanRepository.Add(dailyPlan, request.UserId)
+            .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

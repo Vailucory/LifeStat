@@ -1,5 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Application.UseCases.Users.Queries;
+using LifeStat.Domain.Shared;
+using LifeStat.Domain.Shared.Errors;
+using LifeStat.Infrastructure.Common;
 using Microsoft.AspNetCore.Identity;
 
 namespace LifeStat.Infrastructure.Identity;
@@ -12,31 +15,31 @@ public class IdentityService : IIdentityService
         _userManager = userManager;
     }
 
-    public async Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
+    public async Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
-        if (user == null)
-            return false;
-        
-        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        if (user is null)
+            return Result.FromError(new UserNotFoundError(userId));
 
-        return result.Succeeded;
+        var changePasswordIdentityResult = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
+        return Result.FromErrors(changePasswordIdentityResult.ExtractErrors());
     }
 
-    public async Task<bool> ChangeUserNameAsync(Guid userId, string newUserName)
+    public async Task<Result> ChangeUserNameAsync(Guid userId, string newUserName)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
-        if (user == null)
-            return false;
+        if (user is null)
+            return Result.FromError(new UserNotFoundError(userId));
 
-        var changeUserNameResult = await _userManager.SetUserNameAsync(user, newUserName);
+        var changeUserNameIdentityResult = await _userManager.SetUserNameAsync(user, newUserName);
 
-        return changeUserNameResult.Succeeded;
+        return Result.FromErrors(changeUserNameIdentityResult.ExtractErrors());
     }
 
-    public async Task<Guid?> CreateUserAsync(string userName, string email, string password)
+    public async Task<Result<Guid>> CreateUserAsync(string userName, string email, string password)
     {
         var userToCreate = new ApplicationUser()
         {
@@ -44,48 +47,47 @@ public class IdentityService : IIdentityService
             Email = email
         };
 
-        var creationResult = await _userManager.CreateAsync(userToCreate, password);
+        var creationIdentityResult = await _userManager.CreateAsync(userToCreate, password);
 
-        if (creationResult.Succeeded)
+        if (creationIdentityResult.Succeeded)
         {
             var createdUser = await _userManager.FindByEmailAsync(email);
-            return createdUser?.Id;
+            return Result<Guid>.Good(createdUser!.Id);
         }
 
-        return null;
+        return Result<Guid>.FromErrors(creationIdentityResult.ExtractErrors());
     }
 
-    public async Task<bool> DeleteUserAsync(Guid userId)
+    public async Task<Result> DeleteUserAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user is null)
-        {
-            return false;
-        }
+            return Result.FromError(new UserNotFoundError(userId));
 
-        var deletionResult = await _userManager.DeleteAsync(user);
+        var deletionIdentityResult = await _userManager.DeleteAsync(user);
 
-        return deletionResult.Succeeded;
+        return Result.FromErrors(deletionIdentityResult.ExtractErrors());
     }
 
-    public async Task<UserViewModel?> GetUser(Guid userId)
+    public async Task<Result<UserViewModel>> GetUser(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
         if (user is null)
-            return null;
+            return Result<UserViewModel>.FromError(new UserNotFoundError(userId));
 
-        return new UserViewModel(user.Id, user.UserName!, user.Email!);
+        return Result<UserViewModel>.Good(new UserViewModel(user.Id, user.UserName!, user.Email!));
     }
 
-    public async Task<UserViewModel?> GetUser(string email)
+    public async Task<Result<UserViewModel>> GetUser(string email)
     {
         var user = await _userManager.FindByEmailAsync(email);
 
         if (user is null)
-            return null;
+            return Result<UserViewModel>.
+                FromError(new UserNotFoundError(email, "email"));
 
-        return new UserViewModel(user.Id, user.UserName!, user.Email!);
+        return Result<UserViewModel>.Good(new UserViewModel(user.Id, user.UserName!, user.Email!));
     }
 }

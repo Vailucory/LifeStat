@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Commands.ChangeUserName;
-internal class ChangeUserNameCommandHandler : IRequestHandler<ChangeUserNameCommand, bool>
+internal class ChangeUserNameCommandHandler : ICommandHandler<ChangeUserNameCommand>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ internal class ChangeUserNameCommandHandler : IRequestHandler<ChangeUserNameComm
         _identityService = identityService;
     }
 
-    public async Task<bool> Handle(ChangeUserNameCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ChangeUserNameCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.ChangeUserNameAsync(request.UserId, request.NewUserName);
     }

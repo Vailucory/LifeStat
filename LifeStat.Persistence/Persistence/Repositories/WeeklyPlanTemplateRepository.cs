@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
 using Domain.Models;
-using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
+using LifeStat.Domain.Shared;
+using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,48 +19,70 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
         _mapper = mapper;
     }
 
-    public void Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId)
+    public Result Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId)
     {
-        (_context.InnerUsers
-            .FirstOrDefault(u => u.Id == userId)
-            ?.WeeklyPlanTemplates
-            ?? throw new EntityNotFoundException(userId, typeof(User)))
+        var user = _context.InnerUsers.Find(userId);
+
+        if (user is null)
+            return Result.FromError(new UserNotFoundError(userId));
+
+        user.WeeklyPlanTemplates
             .Add(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
-        ;
+
+        return Result.Good();
     }
 
-    public async Task<WeeklyPlanTemplate> GetByIdAsync(int id)
+    public async Task<Result<WeeklyPlanTemplate>> GetByIdAsync(int id)
     {
-        return _mapper.Map<WeeklyPlanTemplate>(await _context.WeeklyPlanTemplates
-            .FindAsync(id))
-            ?? throw new EntityNotFoundException(id, typeof(WeeklyPlanTemplate));
+        var weeklyPlanTemplate = _mapper.Map<WeeklyPlanTemplate>(await _context.WeeklyPlanTemplates
+            .FindAsync(id));
+
+        if (weeklyPlanTemplate == null)
+        {
+            return Result<WeeklyPlanTemplate>.FromError(
+                new EntityNotFoundError(typeof(WeeklyPlanTemplate), id));
+        }
+
+        return Result<WeeklyPlanTemplate>.Good(weeklyPlanTemplate);
     }
 
-    public async Task<WeeklyPlanTemplate> GetByIdWithDailyPlanTemplatesAsync(int id)
+    public async Task<Result<WeeklyPlanTemplate>> GetByIdWithDailyPlanTemplatesAsync(int id)
     {
-        return _mapper.Map<WeeklyPlanTemplate>(await _context
+        var weeklyPlanTemplate = _mapper.Map<WeeklyPlanTemplate>(await _context
             .WeeklyPlanTemplates
             .Include(wpt => wpt.DailyPlansTemplates)
-            .FirstOrDefaultAsync(wpt => wpt.Id == id))
-            ?? throw new EntityNotFoundException(id, typeof(WeeklyPlanTemplate));
+            .FirstOrDefaultAsync(wpt => wpt.Id == id));
+
+        if (weeklyPlanTemplate == null)
+        {
+            return Result<WeeklyPlanTemplate>.FromError(
+                new EntityNotFoundError(typeof(WeeklyPlanTemplate), id));
+        }
+
+        return Result<WeeklyPlanTemplate>.Good(weeklyPlanTemplate);
     }
 
 
-    public async Task<List<WeeklyPlanTemplate>> GetAllUserWeeklyPlanTemplatesAsync(int userId)
+    public async Task<Result<List<WeeklyPlanTemplate>>> GetAllUserWeeklyPlanTemplatesAsync(int userId)
     {
-        return _mapper.Map<List<WeeklyPlanTemplate>>(await _context
-            .WeeklyPlanTemplates
-            .Where(wpt => wpt.UserId == userId)
-            .ToListAsync());
+        return Result<List<WeeklyPlanTemplate>>.Good(
+            _mapper.Map<List<WeeklyPlanTemplate>>(await _context
+                .WeeklyPlanTemplates
+                .Where(wpt => wpt.UserId == userId)
+                .ToListAsync()));
     }
 
-    public void Remove(WeeklyPlanTemplate weeklyPlanTemplate)
+    public Result Remove(WeeklyPlanTemplate weeklyPlanTemplate)
     {
         _context.WeeklyPlanTemplates.Remove(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+
+        return Result.Good();
     }
 
-    public void Update(WeeklyPlanTemplate weeklyPlanTemplate)
+    public Result Update(WeeklyPlanTemplate weeklyPlanTemplate)
     {
         _context.WeeklyPlanTemplates.Update(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+
+        return Result.Good();
     }
 }

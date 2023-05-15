@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.Activities.Queries.GetAllUserActivities;
-public record GetAllUserActivitiesQuery(int UserId) : IRequest<List<Activity>>
+public record GetAllUserActivitiesQuery(int UserId) : IQuery<List<Activity>>
 {
 }

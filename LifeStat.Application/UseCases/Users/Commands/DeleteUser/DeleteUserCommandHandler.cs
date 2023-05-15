@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Commands.DeleteUser;
-public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, bool>
+public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ public class DeleteUserCommandHandler : IRequestHandler<DeleteUserCommand, bool>
         _identityService = identityService;
     }
 
-    public async Task<bool> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
         return await _identityService.DeleteUserAsync(request.Id);
     }

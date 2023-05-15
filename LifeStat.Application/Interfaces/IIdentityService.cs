@@ -1,18 +1,19 @@
 ﻿using LifeStat.Application.UseCases.Users.Queries;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.Interfaces;
 public interface IIdentityService
 {
 
-    Task<Guid?> CreateUserAsync(string userName, string email, string password);
+    Task<Result<Guid>> CreateUserAsync(string userName, string email, string password);
 
-    Task<UserViewModel?> GetUser(Guid userId);
+    Task<Result<UserViewModel>> GetUser(Guid userId);
 
-    Task<UserViewModel?> GetUser(string email);
+    Task<Result<UserViewModel>> GetUser(string email);
 
-    Task<bool> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
+    Task<Result> ChangePasswordAsync(Guid userId, string currentPassword, string newPassword);
 
-    Task<bool> ChangeUserNameAsync(Guid userId, string newUserName);
+    Task<Result> ChangeUserNameAsync(Guid userId, string newUserName);
 
-    Task<bool> DeleteUserAsync(Guid userId);
+    Task<Result> DeleteUserAsync(Guid userId);
 }

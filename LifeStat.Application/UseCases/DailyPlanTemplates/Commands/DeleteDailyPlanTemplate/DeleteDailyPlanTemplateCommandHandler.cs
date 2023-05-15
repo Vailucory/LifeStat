@@ -1,10 +1,11 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.DeleteDailyPlanTemplate;
-public class DeleteDailyPlanTemplateCommandHandler : IRequestHandler<DeleteDailyPlanTemplateCommand>
+public class DeleteDailyPlanTemplateCommandHandler : ICommandHandler<DeleteDailyPlanTemplateCommand>
 {
     private readonly IDailyPlanTemplateRepository _dailyPlanTemplateRepository;
 
@@ -16,11 +17,10 @@ public class DeleteDailyPlanTemplateCommandHandler : IRequestHandler<DeleteDaily
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(DeleteDailyPlanTemplateCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteDailyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
         //TODO: Handle properly cascade deletion and do not allow to delete if template used in WeeklyPlan templates 
-        _dailyPlanTemplateRepository.Remove(new DailyPlanTemplate { Id = request.Id, });
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+       return _dailyPlanTemplateRepository.Remove(new DailyPlanTemplate { Id = request.Id, })
+            .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

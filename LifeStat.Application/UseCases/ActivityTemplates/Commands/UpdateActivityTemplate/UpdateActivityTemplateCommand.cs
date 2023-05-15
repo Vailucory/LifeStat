@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.ActivityTemplates.Commands.UpdateActivityTemplate;
-public record UpdateActivityTemplateCommand(ActivityTemplate ActivityTemplate) : IRequest
+public record UpdateActivityTemplateCommand(ActivityTemplate ActivityTemplate) : ICommand
 {
 }

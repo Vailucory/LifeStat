@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.DailyPlans.Queries.GetAllUserDailyPlans;
-public record GetAllUserDailyPlansQuery(int UserId) : IRequest<List<DailyPlan>>
+public record GetAllUserDailyPlansQuery(int UserId) : IQuery<List<DailyPlan>>
 {
 }

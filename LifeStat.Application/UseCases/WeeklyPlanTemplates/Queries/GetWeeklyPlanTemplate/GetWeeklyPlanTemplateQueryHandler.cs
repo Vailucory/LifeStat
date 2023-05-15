@@ -1,9 +1,10 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.WeeklyPlanTemplates.Queries.GetWeeklyPlanTemplate;
-public class GetWeeklyPlanTemplateQueryHandler : IRequestHandler<GetWeeklyPlanTemplateQuery, WeeklyPlanTemplate>
+public class GetWeeklyPlanTemplateQueryHandler : IQueryHandler<GetWeeklyPlanTemplateQuery, WeeklyPlanTemplate>
 {
     private readonly IWeeklyPlanTemplateRepository _weeklyPlanTemplateRepository;
 
@@ -12,7 +13,7 @@ public class GetWeeklyPlanTemplateQueryHandler : IRequestHandler<GetWeeklyPlanTe
         _weeklyPlanTemplateRepository = weeklyPlanTemplateRepository;
     }
 
-    public async Task<WeeklyPlanTemplate> Handle(GetWeeklyPlanTemplateQuery request, CancellationToken cancellationToken)
+    public async Task<Result<WeeklyPlanTemplate>> Handle(GetWeeklyPlanTemplateQuery request, CancellationToken cancellationToken)
     {
         return await _weeklyPlanTemplateRepository.GetByIdWithDailyPlanTemplatesAsync(request.Id);
     }

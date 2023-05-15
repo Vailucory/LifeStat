@@ -1,17 +1,18 @@
 ﻿using Domain.Models;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IActivityTemplateRepository
 {
-    void Add(ActivityTemplate activityTemplate, int userId);
+    Result Add(ActivityTemplate activityTemplate, int userId);
 
-    Task<ActivityTemplate> GetByIdAsync(int id);
+    Task<Result<ActivityTemplate>> GetByIdAsync(int id);
 
-    Task<ActivityTemplate> GetByIdWithActivitiesAsync(int id);
+    Task<Result<ActivityTemplate>> GetByIdWithActivitiesAsync(int id);
 
-    Task<List<ActivityTemplate>> GetAllUserActivityTemplatesAsync(int userId);
+    Task<Result<List<ActivityTemplate>>> GetAllUserActivityTemplatesAsync(int userId);
 
-    void Update(ActivityTemplate activityTemplate);
+    Result Update(ActivityTemplate activityTemplate);
 
-    void Remove(ActivityTemplate activityTemplate);
+    Result Remove(ActivityTemplate activityTemplate);
 }

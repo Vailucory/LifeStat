@@ -1,10 +1,11 @@
 ﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Activities.Commands.CreateActivity;
-public class CreateActivityCommandHandler : IRequestHandler<CreateActivityCommand>
+public class CreateActivityCommandHandler : ICommandHandler<CreateActivityCommand>
 {
     private readonly IActivityRepository _activityRepository;
 
@@ -16,7 +17,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task Handle(CreateActivityCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(CreateActivityCommand request, CancellationToken cancellationToken)
     {
         var activity = new Activity()
         {
@@ -27,8 +28,7 @@ public class CreateActivityCommandHandler : IRequestHandler<CreateActivityComman
              EndTimeLocal = request.EndTimeUtcLocal
         };
 
-        _activityRepository.Add(activity, request.UserId);
-
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        return _activityRepository.Add(activity, request.UserId)
+            .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

@@ -1,8 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
-using MediatR;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Queries.GetUser;
-public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserViewModel?>
+public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, UserViewModel>
 {
     private readonly IIdentityService _identityService;
 
@@ -11,7 +11,7 @@ public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, UserVie
         _identityService = identityService;
     }
 
-    public async Task<UserViewModel?> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserViewModel>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         return await _identityService.GetUser(request.Id);
     }

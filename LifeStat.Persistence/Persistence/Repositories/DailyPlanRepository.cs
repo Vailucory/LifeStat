@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Domain.Models;
-using LifeStat.Domain.Exceptions;
 using LifeStat.Domain.Interfaces.Repositories;
+using LifeStat.Domain.Shared;
+using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
 
 namespace LifeStat.Infrastructure.Persistence.Repositories;
 public class DailyPlanRepository : IDailyPlanRepository
@@ -18,47 +18,69 @@ public class DailyPlanRepository : IDailyPlanRepository
         _context = context;
         _mapper = mapper;
     }
-
-    public void Add(DailyPlan dailyPlan, int userId)
+    
+    public Result Add(DailyPlan dailyPlan, int userId)
     {
-        (_context.InnerUsers
-            .FirstOrDefault(u => u.Id == userId)
-            ?.DailyPlans
-            ?? throw new EntityNotFoundException(userId, typeof(User)))
+        var user = _context.InnerUsers.Find(userId);
+
+        if (user is null)
+            return Result.FromError(new UserNotFoundError(userId));
+
+        user.DailyPlans
             .Add(_mapper.Map<DailyPlanDL>(dailyPlan));
+
+        return Result.Good();
     }
 
-    public async Task<DailyPlan> GetByIdAsync(int id)
+    public async Task<Result<DailyPlan>> GetByIdAsync(int id)
     {
-        return _mapper.Map<DailyPlan>(await _context.DailyPlans
-            .FindAsync(id))
-            ?? throw new EntityNotFoundException(id, typeof(DailyPlan));
+        var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
+            .FindAsync(id));
+
+        if (dailyPlan == null)
+        {
+            return Result<DailyPlan>.FromError(
+                new EntityNotFoundError(typeof(DailyPlan), id));
+        }
+
+        return Result<DailyPlan>.Good(dailyPlan);
     }
 
-    public async Task<DailyPlan> GetByIdWithActivitiesAsync(int id)
+    public async Task<Result<DailyPlan>> GetByIdWithActivitiesAsync(int id)
     {
-        return _mapper.Map<DailyPlan>(await _context
-            .DailyPlans
+        var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
             .Include(dp => dp.Activities)
-            .FirstOrDefaultAsync(dp => dp.Id == id))
-            ?? throw new EntityNotFoundException(id, typeof(DailyPlan));
+            .FirstOrDefaultAsync(dp => dp.Id == id));
+
+        if (dailyPlan == null)
+        {
+            return Result<DailyPlan>.FromError(
+                new EntityNotFoundError(typeof(DailyPlan), id));
+        }
+
+        return Result<DailyPlan>.Good(dailyPlan);
     }
 
-    public async Task<List<DailyPlan>> GetAllUserDailyPlansAsync(int userId)
+    public async Task<Result<List<DailyPlan>>> GetAllUserDailyPlansAsync(int userId)
     {
-        return _mapper.Map<List<DailyPlan>>(await _context
-            .DailyPlans
-            .Where(dp => dp.UserId == userId)
-            .ToListAsync());
+        return Result<List<DailyPlan>>.Good(
+            _mapper.Map<List<DailyPlan>>(await _context
+                .DailyPlans
+                .Where(dp => dp.UserId == userId)
+                .ToListAsync()));
     }
 
-    public void Remove(DailyPlan dailyPlan)
+    public Result Remove(DailyPlan dailyPlan)
     {
         _context.DailyPlans.Remove(_mapper.Map<DailyPlanDL>(dailyPlan));
+
+        return Result.Good();
     }
 
-    public void Update(DailyPlan dailyPlan)
+    public Result Update(DailyPlan dailyPlan)
     {
         _context.DailyPlans.Update(_mapper.Map<DailyPlanDL>(dailyPlan));
+
+        return Result.Good();
     }
 }

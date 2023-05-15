@@ -1,15 +1,16 @@
 ﻿using Domain.Models;
+using LifeStat.Domain.Shared;
 
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IDailyPlanActivityDurationRepository
 {
-    void Add(DailyPlanActivityDuration dailyPlanActivityDuration);
+    Result Add(DailyPlanActivityDuration dailyPlanActivityDuration);
 
-    void AddRange(IEnumerable<DailyPlanActivityDuration> dailyPlanActivityDurations);
+    Result AddRange(IEnumerable<DailyPlanActivityDuration> dailyPlanActivityDurations);
 
-    Task<DailyPlanActivityDuration> GetByIdAsync(int id);
+    Task<Result<DailyPlanActivityDuration>> GetByIdAsync(int id);
 
-    void Update(DailyPlanActivityDuration dailyPlanActivityDuration);
+    Result Update(DailyPlanActivityDuration dailyPlanActivityDuration);
 
-    void Remove(DailyPlanActivityDuration dailyPlanActivityDuration);
+    Result Remove(DailyPlanActivityDuration dailyPlanActivityDuration);
 }

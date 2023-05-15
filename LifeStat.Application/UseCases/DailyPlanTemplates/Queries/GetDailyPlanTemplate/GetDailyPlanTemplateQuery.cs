@@ -1,7 +1,7 @@
 ﻿using Domain.Models;
-using MediatR;
+using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates.Queries.GetDailyPlanTemplate;
-public record GetDailyPlanTemplateQuery(int Id) : IRequest<DailyPlanTemplate>
+public record GetDailyPlanTemplateQuery(int Id) : IQuery<DailyPlanTemplate>
 {
 }

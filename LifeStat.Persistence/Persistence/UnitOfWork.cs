@@ -1,4 +1,6 @@
 ﻿using LifeStat.Domain.Interfaces.UnitOfWork;
+using LifeStat.Domain.Shared;
+using LifeStat.Domain.Shared.Errors;
 
 namespace LifeStat.Infrastructure.Persistence;
 
@@ -11,8 +13,16 @@ public class UnitOfWork : IUnitOfWork
         _context = context;
     }
 
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task<Result> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        return _context.SaveChangesAsync(cancellationToken);
+        try
+        {
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Good();
+        }
+        catch (Exception e)
+        {
+            return Result.FromError(Error.FromException(e));
+        }
     }
 }
