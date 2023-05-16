@@ -25,7 +25,7 @@ public class CreateActivityCommandHandler : ICommandHandler<CreateActivityComman
              StartTimeUtc = request.StartTimeUtc,
              EndTimeUtc = request.EndTimeUtc,
              StartTimeLocal = request.StartTimeLocal,
-             EndTimeLocal = request.EndTimeUtcLocal
+             EndTimeLocal = request.EndTimeLocal
         };
 
         return _activityRepository.Add(activity, request.UserId)

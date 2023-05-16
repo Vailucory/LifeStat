@@ -7,7 +7,7 @@ public record CreateActivityCommand(
     DateTime StartTimeUtc,
     DateTime EndTimeUtc,
     DateTime StartTimeLocal,
-    DateTime EndTimeUtcLocal
+    DateTime EndTimeLocal
     ) : ICommand
 {
 }
