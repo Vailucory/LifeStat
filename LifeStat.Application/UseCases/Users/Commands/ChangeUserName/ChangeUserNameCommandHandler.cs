@@ -2,7 +2,7 @@
 using LifeStat.Domain.Shared;
 
 namespace LifeStat.Application.UseCases.Users.Commands.ChangeUserName;
-internal class ChangeUserNameCommandHandler : ICommandHandler<ChangeUserNameCommand>
+public class ChangeUserNameCommandHandler : ICommandHandler<ChangeUserNameCommand>
 {
     private readonly IIdentityService _identityService;
 
