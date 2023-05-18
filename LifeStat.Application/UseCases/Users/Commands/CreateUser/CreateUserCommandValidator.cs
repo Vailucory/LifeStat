@@ -13,10 +13,11 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
         RuleFor(x => x.UserName)
             .NotEmpty()
             .Matches(ValidatorsConstants.USERNAME_REGEX)
-            .Length();
+            .Length(ValidatorsConstants.USERNAME_MIN_LENGTH, ValidatorsConstants.USERNAME_MAX_LENGTH);
 
         RuleFor(x => x.Password)
             .NotEmpty()
+            .Length(ValidatorsConstants.PASSWORD_MIN_LENGTH, ValidatorsConstants.PASSWORD_MAX_LENGTH)
             .Matches(ValidatorsConstants.PASSWORD_REGEX);
     }
 }

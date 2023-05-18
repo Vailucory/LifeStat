@@ -8,7 +8,7 @@ public class ChangeUserNameCommandValidator : AbstractValidator<ChangeUserNameCo
     {
         RuleFor(x => x.UserId)
             .NotEmpty()
-            .NotEqual(Guid.Empty); ;
+            .NotEqual(Guid.Empty);
 
         RuleFor(x => x.NewUserName)
             .NotEmpty()

@@ -6,6 +6,6 @@ public class UpdateDailyPlanTemplateCommandValidator : AbstractValidator<UpdateD
 {
     public UpdateDailyPlanTemplateCommandValidator()
     {
-        RuleFor(x => x.DailyPlanTemplate).SetValidator(new DailyPlanTemplateValidator);
+        RuleFor(x => x.DailyPlanTemplate).SetValidator(new DailyPlanTemplateValidator());
     }
 }
