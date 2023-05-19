@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Infrastructure", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Application", "LifeStat.Application\LifeStat.Application.csproj", "{BFB625AC-7F51-466B-83B6-45D57883DEDF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LifeStat.Api", "LifeStat.Api\LifeStat.Api.csproj", "{6EDF7317-9F8A-4657-9BC1-2BAE7171F576}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFB625AC-7F51-466B-83B6-45D57883DEDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6EDF7317-9F8A-4657-9BC1-2BAE7171F576}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6EDF7317-9F8A-4657-9BC1-2BAE7171F576}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6EDF7317-9F8A-4657-9BC1-2BAE7171F576}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6EDF7317-9F8A-4657-9BC1-2BAE7171F576}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
