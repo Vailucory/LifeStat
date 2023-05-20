@@ -1,12 +1,17 @@
 using LifeStat.Application;
+using LifeStat.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .Build();
 
 
 // Add services to the container.
 
 builder.Services.AddApplication();
+builder.Services.AddInfrastructure(configuration);
 
 builder.Services.AddControllers();
 
@@ -24,7 +29,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization(); 
+app.UseInfrastructure();
 
 app.MapControllers();
 

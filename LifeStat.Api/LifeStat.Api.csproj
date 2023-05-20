@@ -17,4 +17,8 @@
     <ProjectReference Include="..\LifeStat.Persistence\LifeStat.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
