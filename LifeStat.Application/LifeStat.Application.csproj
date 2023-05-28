@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain\LifeStat.Domain.csproj" />
+    <ProjectReference Include="..\LifeStat.Domain\LifeStat.Domain.csproj" />
   </ItemGroup>
 
 </Project>

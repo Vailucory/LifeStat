@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Domain", "Domain\LifeStat.Domain.csproj", "{50CEC595-B7AB-406B-AEEE-29277866753F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Domain", "LifeStat.Domain\LifeStat.Domain.csproj", "{50CEC595-B7AB-406B-AEEE-29277866753F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Infrastructure", "LifeStat.Persistence\LifeStat.Infrastructure.csproj", "{5DA92FC6-076D-46A8-9177-EDA306B6106B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Infrastructure", "LifeStat.Infrastructure\LifeStat.Infrastructure.csproj", "{5DA92FC6-076D-46A8-9177-EDA306B6106B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LifeStat.Application", "LifeStat.Application\LifeStat.Application.csproj", "{BFB625AC-7F51-466B-83B6-45D57883DEDF}"
 EndProject
