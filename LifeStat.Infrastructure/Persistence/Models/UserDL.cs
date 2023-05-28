@@ -27,5 +27,7 @@ public class UserDL
     #region Navigation Properties
 
     public ApplicationUser ApplicationUser { get; set; } = new();
+
+    public Guid ApplicationUserId { get; set; }
     #endregion
 }

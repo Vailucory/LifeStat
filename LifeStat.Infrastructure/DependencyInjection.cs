@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -81,11 +82,17 @@ public static class DependencyInjection
             setup.Password.RequireNonAlphanumeric = false;
             setup.Password.RequireDigit = false;
         });
-        identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(IdentityRole), services);
-        identityBuilder.AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-        services.AddSingleton<IJwtTokenAuthenticationService, JwtTokenAuthenticationService>();
-        services.AddSingleton<IIdentityService, IdentityService>();
+        identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(ApplicationRole), services);
+
+        identityBuilder
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders()
+            .AddSignInManager<SignInManager<ApplicationUser>>();
+
+        services.AddScoped<IJwtTokenAuthenticationService, JwtTokenAuthenticationService>();
+
+        services.AddScoped<IIdentityService, IdentityService>();
 
         #endregion
 

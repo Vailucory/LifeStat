@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace LifeStat.Infrastructure.Persistence;
-public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
 {
     public DbSet<ActivityDL> Activities { get; set; }
     public DbSet<ActivityTemplateDL> ActivityTemplates { get; set; }
@@ -29,7 +29,8 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
         #region Relations
         modelBuilder.Entity<ApplicationUser>()
             .HasOne(au => au.InnerUser)
-            .WithOne(u => u.ApplicationUser);
+            .WithOne(u => u.ApplicationUser)
+            .HasForeignKey<UserDL>(u => u.ApplicationUserId);
 
         modelBuilder.Entity<ActivityTemplateDL>()
             .HasOne(at => at.User)
