@@ -37,7 +37,7 @@ public class Result
 
     public Error[] Errors { get; init; }
 
-    public bool IsSucceeded { get => Errors.Any(); }
+    public bool IsSucceeded { get => !Errors.Any(); }
 }
 
 
