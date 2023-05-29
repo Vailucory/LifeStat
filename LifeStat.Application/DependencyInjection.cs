@@ -12,6 +12,8 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationPipelineBehavior<,>));
 
+        ValidatorOptions.Global.LanguageManager.Culture = new System.Globalization.CultureInfo("en-US");
+
         services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
 
         return services;
