@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.CreateDailyPlanTemplate;
+namespace LifeStat.Application.UseCases.DailyPlanTemplates;
 public class CreateDailyPlanTemplateCommandHandler : ICommandHandler<CreateDailyPlanTemplateCommand>
 {
     private readonly IDailyPlanTemplateRepository _dailyPlanTemplateRepository;

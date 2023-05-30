@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.Activities.Commands.CreateActivity;
+namespace LifeStat.Application.UseCases.Activities;
 public class CreateActivityCommandValidator : AbstractValidator<CreateActivityCommand>
 {
     public CreateActivityCommandValidator()

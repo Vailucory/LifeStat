@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LifeStat.Application.Validators;
 
-namespace LifeStat.Application.UseCases.Users.Commands.ChangeUserName;
+namespace LifeStat.Application.UseCases.Users;
 public class ChangeUserNameCommandValidator : AbstractValidator<ChangeUserNameCommand>
 {
     public ChangeUserNameCommandValidator()

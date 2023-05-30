@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.DeleteDailyPlanTemplate;
+namespace LifeStat.Application.UseCases.DailyPlanTemplates;
 public class DeleteDailyPlanTemplateCommandHandler : ICommandHandler<DeleteDailyPlanTemplateCommand>
 {
     private readonly IDailyPlanTemplateRepository _dailyPlanTemplateRepository;

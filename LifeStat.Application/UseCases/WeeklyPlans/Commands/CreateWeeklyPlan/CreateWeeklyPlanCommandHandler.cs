@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.WeeklyPlans.Commands.CreateWeeklyPlan;
+namespace LifeStat.Application.UseCases.WeeklyPlans;
 public class CreateWeeklyPlanCommandHandler : ICommandHandler<CreateWeeklyPlanCommand>
 {
     private readonly IWeeklyPlanRepository _weeklyPlanRepository;

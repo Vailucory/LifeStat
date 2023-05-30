@@ -1,6 +1,6 @@
 ﻿using LifeStat.Application.Interfaces;
 
-namespace LifeStat.Application.UseCases.Users.Commands.ChangePassword;
+namespace LifeStat.Application.UseCases.Users;
 public record ChangePasswordCommand(Guid UserId, string CurrentPassword, string NewPassword) : ICommand
 {
 }

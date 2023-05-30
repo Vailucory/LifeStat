@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.Activities.Commands.CreateActivity;
+namespace LifeStat.Application.UseCases.Activities;
 public class CreateActivityCommandHandler : ICommandHandler<CreateActivityCommand>
 {
     private readonly IActivityRepository _activityRepository;

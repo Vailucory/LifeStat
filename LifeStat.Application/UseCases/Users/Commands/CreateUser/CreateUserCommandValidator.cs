@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LifeStat.Application.Validators;
 
-namespace LifeStat.Application.UseCases.Users.Commands.CreateUser;
+namespace LifeStat.Application.UseCases.Users;
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserCommandValidator()

@@ -3,7 +3,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.WeeklyPlanTemplates.Commands.UpdateWeeklyPlanTemplate;
+namespace LifeStat.Application.UseCases.WeeklyPlanTemplates;
 public class UpdateWeeklyPlanTemplateCommandHandler : ICommandHandler<UpdateWeeklyPlanTemplateCommand>
 {
     private readonly IWeeklyPlanTemplateRepository _weeklyPlanTemplateRepository;

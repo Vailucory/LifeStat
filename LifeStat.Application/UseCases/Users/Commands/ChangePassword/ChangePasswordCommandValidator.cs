@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LifeStat.Application.Validators;
 
-namespace LifeStat.Application.UseCases.Users.Commands.ChangePassword;
+namespace LifeStat.Application.UseCases.Users;
 public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand>
 {
     public ChangePasswordCommandValidator()

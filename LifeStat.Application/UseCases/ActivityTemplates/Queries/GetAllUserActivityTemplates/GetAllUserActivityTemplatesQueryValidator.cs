@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Queries.GetAllUserActivityTemplates;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class GetAllUserActivityTemplatesQueryValidator : AbstractValidator<GetAllUserActivityTemplatesQuery>
 {
     public GetAllUserActivityTemplatesQueryValidator()

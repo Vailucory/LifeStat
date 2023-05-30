@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.Users.Queries.GetUserByEmail;
+namespace LifeStat.Application.UseCases.Users;
 public class GetUserByEmailQueryValidator : AbstractValidator<GetUserByEmailQuery>
 {
     public GetUserByEmailQueryValidator()

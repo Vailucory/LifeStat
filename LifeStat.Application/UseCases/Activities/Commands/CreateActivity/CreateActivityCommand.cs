@@ -1,6 +1,6 @@
 ﻿using LifeStat.Application.Interfaces;
 
-namespace LifeStat.Application.UseCases.Activities.Commands.CreateActivity;
+namespace LifeStat.Application.UseCases.Activities;
 public record CreateActivityCommand(
     int UserId,
     int ActivityTemplateId,

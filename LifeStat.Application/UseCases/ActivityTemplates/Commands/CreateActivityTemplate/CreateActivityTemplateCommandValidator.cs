@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LifeStat.Application.Validators;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Commands.CreateActivityTemplate;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class CreateActivityTemplateCommandValidator : AbstractValidator<CreateActivityTemplateCommand>
 {
     public CreateActivityTemplateCommandValidator()

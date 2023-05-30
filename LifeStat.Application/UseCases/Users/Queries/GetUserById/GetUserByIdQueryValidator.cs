@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using LifeStat.Application.UseCases.Users.Queries.GetUser;
 
-namespace LifeStat.Application.UseCases.Users.Queries.GetUserById;
+namespace LifeStat.Application.UseCases.Users;
 public class GetUserByIdQueryValidator : AbstractValidator<GetUserByIdQuery>
 {
     public GetUserByIdQueryValidator()

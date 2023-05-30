@@ -3,7 +3,7 @@ using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Queries.GetActivityTemplate;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class GetActivityTemplateQueryHandler : IQueryHandler<GetActivityTemplateQuery, ActivityTemplate>
 {
     private readonly IActivityTemplateRepository _activityTemplateRepository;

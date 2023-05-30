@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.WeeklyPlans.Queries.GetWeeklyPlan;
+namespace LifeStat.Application.UseCases.WeeklyPlans;
 public class GetWeeklyPlanQueryValidator : AbstractValidator<GetWeeklyPlanQuery>
 {
     public GetWeeklyPlanQueryValidator()

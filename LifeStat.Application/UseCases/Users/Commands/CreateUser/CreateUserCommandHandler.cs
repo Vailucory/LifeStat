@@ -1,7 +1,7 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.Users.Commands.CreateUser;
+namespace LifeStat.Application.UseCases.Users;
 public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Guid>
 {
     private readonly IIdentityService _identityService;

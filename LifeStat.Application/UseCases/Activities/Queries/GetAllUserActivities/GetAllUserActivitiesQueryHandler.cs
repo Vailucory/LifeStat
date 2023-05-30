@@ -3,7 +3,7 @@ using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.Activities.Queries.GetAllUserActivities;
+namespace LifeStat.Application.UseCases.Activities;
 public class GetAllUserActivitiesQueryHandler : IQueryHandler<GetAllUserActivitiesQuery, List<Activity>>
 {
     private readonly IActivityRepository _activityRepository;

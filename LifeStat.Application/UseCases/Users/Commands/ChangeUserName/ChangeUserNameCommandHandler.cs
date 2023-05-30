@@ -1,7 +1,7 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.Users.Commands.ChangeUserName;
+namespace LifeStat.Application.UseCases.Users;
 public class ChangeUserNameCommandHandler : ICommandHandler<ChangeUserNameCommand>
 {
     private readonly IIdentityService _identityService;

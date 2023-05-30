@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using LifeStat.Application.Validators;
 
-namespace LifeStat.Application.UseCases.DailyPlanTemplates.Commands.UpdateDailyPlanTemplate;
+namespace LifeStat.Application.UseCases.DailyPlanTemplates;
 public class UpdateDailyPlanTemplateCommandValidator : AbstractValidator<UpdateDailyPlanTemplateCommand>
 {
     public UpdateDailyPlanTemplateCommandValidator()

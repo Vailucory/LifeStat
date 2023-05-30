@@ -3,7 +3,7 @@ using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.DailyPlanTemplates.Queries.GetDailyPlanTemplate;
+namespace LifeStat.Application.UseCases.DailyPlanTemplates;
 public class GetDailyPlanTemplateQueryHandler : IQueryHandler<GetDailyPlanTemplateQuery, DailyPlanTemplate>
 {
     private readonly IDailyPlanTemplateRepository _dailyPlanTemplateRepository;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LifeStat.Application.UseCases.WeeklyPlanTemplates.Commands.CreateWeeklyPlanTemplate;
+namespace LifeStat.Application.UseCases.WeeklyPlanTemplates;
 public class CreateWeeklyPlanTemplateCommandValidator : AbstractValidator<CreateWeeklyPlanTemplateCommand>
 {
     public CreateWeeklyPlanTemplateCommandValidator()

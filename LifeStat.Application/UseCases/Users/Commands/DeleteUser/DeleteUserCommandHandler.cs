@@ -1,7 +1,7 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.Users.Commands.DeleteUser;
+namespace LifeStat.Application.UseCases.Users;
 public class DeleteUserCommandHandler : ICommandHandler<DeleteUserCommand>
 {
     private readonly IIdentityService _identityService;

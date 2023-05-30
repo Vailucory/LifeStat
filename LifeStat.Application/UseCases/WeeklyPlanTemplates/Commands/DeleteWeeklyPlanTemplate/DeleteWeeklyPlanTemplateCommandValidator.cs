@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.WeeklyPlanTemplates.Commands.DeleteWeeklyPlanTemplate;
+namespace LifeStat.Application.UseCases.WeeklyPlanTemplates;
 public class DeleteWeeklyPlanTemplateCommandValidator : AbstractValidator<DeleteWeeklyPlanTemplateCommand>
 {
     public DeleteWeeklyPlanTemplateCommandValidator()

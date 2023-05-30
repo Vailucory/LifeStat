@@ -1,7 +1,8 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Shared;
+using LifeStat.Infrastructure.Identity;
 
-namespace LifeStat.Application.UseCases.Users.Queries.GetUserByEmail;
+namespace LifeStat.Application.UseCases.Users;
 public class GetUserByEmailQueryHandler : IQueryHandler<GetUserByEmailQuery, UserViewModel>
 {
     private readonly IIdentityService _identityService;

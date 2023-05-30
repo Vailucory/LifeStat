@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.DailyPlans.Commands.CreateDailyPlan;
+namespace LifeStat.Application.UseCases.DailyPlans;
 public class CreateDailyPlanCommandValidator : AbstractValidator<CreateDailyPlanCommand>
 {
     public CreateDailyPlanCommandValidator()

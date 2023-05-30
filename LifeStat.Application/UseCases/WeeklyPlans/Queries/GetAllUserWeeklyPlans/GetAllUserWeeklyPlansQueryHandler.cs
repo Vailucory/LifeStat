@@ -3,7 +3,7 @@ using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.WeeklyPlans.Queries.GetAllUserWeeklyPlans;
+namespace LifeStat.Application.UseCases.WeeklyPlans;
 public class GetAllUserWeeklyPlansQueryHandler : IQueryHandler<GetAllUserWeeklyPlansQuery, List<WeeklyPlan>>
 {
     private readonly IWeeklyPlanRepository _weeklyPlanRepository;

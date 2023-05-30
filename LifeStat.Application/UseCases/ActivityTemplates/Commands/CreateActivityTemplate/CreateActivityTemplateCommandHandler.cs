@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Commands.CreateActivityTemplate;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class CreateActivityTemplateCommandHandler : ICommandHandler<CreateActivityTemplateCommand>
 {
     private readonly IActivityTemplateRepository _activityTemplateRepository;

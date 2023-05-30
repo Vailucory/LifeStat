@@ -4,7 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Commands.DeleteActivityTemplate;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class DeleteActivityTemplateCommandHandler : ICommandHandler<DeleteActivityTemplateCommand>
 {
     private readonly IActivityTemplateRepository _activityTemplateRepository;

@@ -3,7 +3,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.UseCases.ActivityTemplates.Commands.UpdateActivityTemplate;
+namespace LifeStat.Application.UseCases.ActivityTemplates;
 public class UpdateActivityTemplateCommandHandler : ICommandHandler<UpdateActivityTemplateCommand>
 {
     private readonly IActivityTemplateRepository _activityTemplateRepository;

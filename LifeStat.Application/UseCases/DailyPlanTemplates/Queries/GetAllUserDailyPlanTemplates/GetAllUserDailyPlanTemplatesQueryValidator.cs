@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace LifeStat.Application.UseCases.DailyPlanTemplates.Queries.GetAllUserDailyPlanTemplates;
+namespace LifeStat.Application.UseCases.DailyPlanTemplates;
 public class GetAllUserDailyPlanTemplatesQueryValidator : AbstractValidator<GetAllUserDailyPlanTemplatesQuery>
 {
     public GetAllUserDailyPlanTemplatesQueryValidator()
