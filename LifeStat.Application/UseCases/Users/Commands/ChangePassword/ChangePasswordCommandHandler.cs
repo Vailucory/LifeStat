@@ -1,5 +1,6 @@
 ﻿using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Shared;
+using LifeStat.Infrastructure.Identity;
 
 namespace LifeStat.Application.UseCases.Users;
 public class ChangePasswordCommandHandler : ICommandHandler<ChangePasswordCommand>

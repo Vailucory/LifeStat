@@ -1,6 +1,4 @@
-﻿using LifeStat.Application.Interfaces;
-using LifeStat.Application.UseCases.Users.Queries;
-using LifeStat.Domain.Shared;
+﻿using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Common;
 using Microsoft.AspNetCore.Identity;

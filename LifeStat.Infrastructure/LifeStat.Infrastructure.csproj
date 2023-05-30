@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LifeStat.Domain\LifeStat.Domain.csproj" />
-    <ProjectReference Include="..\LifeStat.Application\LifeStat.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

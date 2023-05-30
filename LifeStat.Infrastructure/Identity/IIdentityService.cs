@@ -1,7 +1,6 @@
-﻿using LifeStat.Application.UseCases.Users.Queries;
-using LifeStat.Domain.Shared;
+﻿using LifeStat.Domain.Shared;
 
-namespace LifeStat.Application.Interfaces;
+namespace LifeStat.Infrastructure.Identity;
 public interface IIdentityService
 {
 
