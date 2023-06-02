@@ -15,9 +15,9 @@ public class User
 
     public List<WeeklyPlan> WeeklyPlans { get; set; } = new();
 
-    public Activity CurrentActivity { get; set; } = new();
+    public Activity CurrentActivity { get; set; } 
 
-    public DailyPlan CurrentDailyPlan { get; set; } = new();
+    public DailyPlan CurrentDailyPlan { get; set; } 
 
-    public WeeklyPlan CurrentWeeklyPlan { get; set; } = new();
+    public WeeklyPlan CurrentWeeklyPlan { get; set; } 
 }

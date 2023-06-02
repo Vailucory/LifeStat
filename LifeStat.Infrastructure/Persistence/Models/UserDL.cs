@@ -18,15 +18,15 @@ public class UserDL
 
     public List<WeeklyPlanDL> WeeklyPlans { get; set; } = new();
 
-    public ActivityDL CurrentActivity { get; set; } = new();
+    public ActivityDL? CurrentActivity { get; set; } 
 
-    public DailyPlanDL CurrentDailyPlan { get; set; } = new();
+    public DailyPlanDL? CurrentDailyPlan { get; set; } 
 
-    public WeeklyPlanDL CurrentWeeklyPlan { get; set; } = new();
+    public WeeklyPlanDL? CurrentWeeklyPlan { get; set; } 
 
     #region Navigation Properties
 
-    public ApplicationUser ApplicationUser { get; set; } = new();
+    public ApplicationUser ApplicationUser { get; set; } 
 
     public Guid ApplicationUserId { get; set; }
     #endregion
