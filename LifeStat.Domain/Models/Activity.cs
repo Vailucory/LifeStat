@@ -12,7 +12,7 @@ public class Activity
 
     public string Name { get; set; } = string.Empty;
 
-    public ActivityTemplate Template { get; set; } = new();
+    public ActivityTemplate Template { get; set; } 
 
     public DateTimeOffset StartTimeUtc { get; set; }
 

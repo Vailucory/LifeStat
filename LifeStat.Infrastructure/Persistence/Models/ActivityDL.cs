@@ -3,7 +3,7 @@ public class ActivityDL
 {
     public int Id { get; set; }
 
-    public ActivityTemplateDL Template { get; set; } = new();
+    public ActivityTemplateDL Template { get; set; } 
     public string Name { get; set; } = string.Empty;
 
     public DateTimeOffset StartTimeUtc { get; set; }
@@ -15,11 +15,11 @@ public class ActivityDL
     public DateTimeOffset EndTimeLocal { get; set; }
 
     #region Navigation Properties
-    public UserDL? User { get; set; } = new();
+    public UserDL? User { get; set; }
 
     public int? UserId { get; set; }
 
-    public DailyPlanDL? DailyPlan { get; set; } = new();
+    public DailyPlanDL? DailyPlan { get; set; }
 
     public int? DailyPlanId { get; set; }
 

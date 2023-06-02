@@ -5,7 +5,7 @@ public class WeeklyPlan
 {
     public int Id { get; set; }
 
-    public WeeklyPlanTemplate WeeklyPlanTemplate { get; set; } = new();
+    public WeeklyPlanTemplate WeeklyPlanTemplate { get; set; }
 
     public List<DailyPlan> DailyPlans { get; set; } = new();
 

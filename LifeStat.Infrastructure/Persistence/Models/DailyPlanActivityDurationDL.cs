@@ -4,9 +4,9 @@ public class DailyPlanActivityDurationDL
 {
     public int Id { get; set; }
 
-    public DailyPlanTemplateDL DailyPlanTemplate { get; set; } = new();
+    public DailyPlanTemplateDL DailyPlanTemplate { get; set; } 
 
-    public ActivityTemplateDL ActivityTemplate { get; set; } = new();
+    public ActivityTemplateDL ActivityTemplate { get; set; } 
 
     public TimeSpan Duration { get; set; }
 

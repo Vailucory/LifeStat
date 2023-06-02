@@ -9,7 +9,7 @@ public class WeeklyPlanTemplateDL
     public List<DailyPlanTemplateDL> DailyPlansTemplates { get; set; } = new();
 
     #region Navigation Properties
-    public UserDL User { get; set; } = new();
+    public UserDL User { get; set; }
 
     public int UserId { get; set; }
 

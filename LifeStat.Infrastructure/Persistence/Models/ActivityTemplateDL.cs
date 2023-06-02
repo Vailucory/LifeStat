@@ -13,7 +13,7 @@ public class ActivityTemplateDL
     #region Navigation Properties
     public List<ActivityDL> Activities { get; set; } = new();
 
-    public UserDL User { get; set; } = new();
+    public UserDL User { get; set; }
 
     public int UserId { get; set; }
 

@@ -9,7 +9,7 @@ public class DailyPlanTemplateDL
     public List<DailyPlanActivityDurationDL> Activities { get; set; } = new();
 
     #region Navigation Properties
-    public UserDL User { get; set; } = new();
+    public UserDL User { get; set; } 
 
     public int UserId { get; set; }
 

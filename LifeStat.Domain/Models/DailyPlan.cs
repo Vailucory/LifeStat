@@ -5,7 +5,7 @@ public class DailyPlan
 {
     public int Id { get; set; }
 
-    public DailyPlanTemplate DailyPlanTemplate { get; set; } = new();
+    public DailyPlanTemplate DailyPlanTemplate { get; set; } 
 
     public List<Activity> Activities { get; set; } = new();
 
