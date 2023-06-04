@@ -1,3 +1,4 @@
+using LifeStat.Api.Converters;
 using LifeStat.Application;
 using LifeStat.Infrastructure;
 
@@ -13,7 +14,8 @@ var configuration = new ConfigurationBuilder()
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(op => op.JsonSerializerOptions.Converters.Add(new TimeSpanToJsonStringConverter()));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
