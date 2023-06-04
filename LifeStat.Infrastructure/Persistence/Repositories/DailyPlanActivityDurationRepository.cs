@@ -4,6 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Persistence.Models;
+using System.Diagnostics;
 
 namespace LifeStat.Infrastructure.Persistence.Repositories;
 public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRepository
@@ -62,9 +63,21 @@ public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRep
 
     public Result Update(DailyPlanActivityDuration dailyPlanActivityDuration)
     {
-        _context.DailyPlanActivityDurations
-            .Update(_mapper
-            .Map<DailyPlanActivityDurationDL>(dailyPlanActivityDuration));
+        var entity = _context.DailyPlanActivityDurations.Find(dailyPlanActivityDuration.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlanActivityDuration), dailyPlanActivityDuration.Id));
+        }
+
+        entity.Duration = dailyPlanActivityDuration.Duration;
+
+        entity.ActivityTemplateId = dailyPlanActivityDuration.ActivityTemplate.Id;
+
+        entity.DailyPlanTemplateId = dailyPlanActivityDuration.DailyPlanTemplate.Id;
+
+        _context.DailyPlanActivityDurations.Update(entity);
 
         return Result.Good();
     }

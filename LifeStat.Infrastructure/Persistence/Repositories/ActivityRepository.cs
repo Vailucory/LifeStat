@@ -83,7 +83,23 @@ public class ActivityRepository : IActivityRepository
 
     public Result Update(Activity activity)
     {
-        _context.Activities.Update(_mapper.Map<ActivityDL>(activity));
+        var entity = _context.Activities.Find(activity.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(Activity), activity.Id));
+        }
+
+        entity.StartTimeLocal = activity.StartTimeLocal;
+
+        entity.EndTimeLocal = activity.EndTimeLocal;
+
+        entity.StartTimeUtc = activity.StartTimeUtc;
+
+        entity.EndTimeUtc = activity.EndTimeUtc;
+
+        _context.Activities.Update(entity);
 
         return Result.Good();
     }

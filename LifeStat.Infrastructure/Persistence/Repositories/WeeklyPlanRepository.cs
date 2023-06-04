@@ -87,7 +87,19 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
 
     public Result Update(WeeklyPlan weeklyPlan)
     {
-        _context.WeeklyPlans.Update(_mapper.Map<WeeklyPlanDL>(weeklyPlan));
+        var entity = _context.WeeklyPlans.Find(weeklyPlan.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(WeeklyPlan), weeklyPlan.Id));
+        }
+
+        entity.FulfillmentStatus = weeklyPlan.FulfillmentStatus;
+
+        entity.WeeklyPlanTemplateId = weeklyPlan.WeeklyPlanTemplate.Id;
+
+        _context.WeeklyPlans.Update(entity);
 
         return Result.Good();
     }

@@ -79,7 +79,19 @@ public class DailyPlanRepository : IDailyPlanRepository
 
     public Result Update(DailyPlan dailyPlan)
     {
-        _context.DailyPlans.Update(_mapper.Map<DailyPlanDL>(dailyPlan));
+        var entity = _context.DailyPlans.Find(dailyPlan.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlan), dailyPlan.Id));
+        }
+
+        entity.DailyPlanTemplateId = dailyPlan.DailyPlanTemplate.Id;
+
+        entity.FulfillmentStatus = dailyPlan.FulfillmentStatus;
+
+        _context.DailyPlans.Update(entity);
 
         return Result.Good();
     }

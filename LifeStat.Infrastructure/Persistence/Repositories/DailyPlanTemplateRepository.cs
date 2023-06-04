@@ -96,7 +96,38 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
     
     public Result Update(DailyPlanTemplate dailyPlanTemplate)
     {
-        _context.DailyPlanTemplates.Update(_mapper.Map<DailyPlanTemplateDL>(dailyPlanTemplate));
+        var entity = _context.DailyPlanTemplates
+            .Include(dpt => dpt.Activities)
+            .Where(dpt => dpt.Id == dailyPlanTemplate.Id)
+            .FirstOrDefault();
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlanTemplate), dailyPlanTemplate.Id));
+        }
+
+        entity.Name = dailyPlanTemplate.Name;
+
+        if (dailyPlanTemplate.Activities != null)
+        {
+            var zipped = dailyPlanTemplate.Activities.Zip(entity.Activities);
+
+            foreach (var pair in zipped)
+            {
+                DailyPlanActivityDurationDL dbActivity = pair.Second;
+                DailyPlanActivityDuration inActivity = pair.First;
+
+                dbActivity.Duration = inActivity.Duration;
+
+                dbActivity.ActivityTemplateId = inActivity.ActivityTemplate.Id;
+
+                dbActivity.DailyPlanTemplateId = inActivity.DailyPlanTemplate.Id;
+            }
+        }
+
+        _context.DailyPlanTemplates.Update(entity);
+
 
         return Result.Good();
     }

@@ -81,7 +81,33 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
 
     public Result Update(WeeklyPlanTemplate weeklyPlanTemplate)
     {
-        _context.WeeklyPlanTemplates.Update(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+        var entity = _context.WeeklyPlanTemplates.Find(weeklyPlanTemplate.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(WeeklyPlanTemplate), weeklyPlanTemplate.Id));
+        }
+
+        entity.Name = weeklyPlanTemplate.Name;
+
+        if (weeklyPlanTemplate.DailyPlansTemplates != null)
+        {
+            var zipped = weeklyPlanTemplate.DailyPlansTemplates.Zip(entity.DailyPlansTemplates);
+
+            foreach (var pair in zipped)
+            {
+                DailyPlanTemplateDL dbPlanTemplate = pair.Second;
+                DailyPlanTemplate inPlanTemplate = pair.First;
+
+                dbPlanTemplate.Id = inPlanTemplate.Id;
+
+                dbPlanTemplate.Name = inPlanTemplate.Name;
+
+            }
+        }
+
+        _context.WeeklyPlanTemplates.Update(entity);
 
         return Result.Good();
     }

@@ -81,7 +81,19 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
 
     public Result Update(ActivityTemplate activityTemplate)
     {
-        _context.ActivityTemplates.Update(_mapper.Map<ActivityTemplateDL>(activityTemplate));
+        var entity = _context.ActivityTemplates.Find(activityTemplate.Id);
+
+        if (entity == null)
+        {
+            return Result.FromError(
+                new EntityNotFoundError(typeof(ActivityTemplate), activityTemplate.Id));
+        }
+        
+        entity.Name = activityTemplate.Name;
+
+        entity.Type = activityTemplate.Type;
+
+        _context.ActivityTemplates.Update(entity);
 
         return Result.Good();
     }
