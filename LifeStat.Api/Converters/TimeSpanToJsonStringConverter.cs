@@ -7,8 +7,14 @@ public class TimeSpanToJsonStringConverter : JsonConverter<TimeSpan>
 {
     public override TimeSpan Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var value = reader.GetString();
-        return TimeSpan.Parse(value);
+        try
+        {
+            return TimeSpan.Parse(reader.GetString()!);
+        }
+        catch (Exception)
+        {
+            return TimeSpan.Zero;
+        }
     }
 
     public override void Write(Utf8JsonWriter writer, TimeSpan value, JsonSerializerOptions options)
