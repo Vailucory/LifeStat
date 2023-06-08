@@ -15,5 +15,7 @@ public class DailyPlanTemplateDL
 
     public List<DailyPlanDL> DailyPlans { get; set; } = new();
 
+    public List<WeeklyPlanTemplateDayDL> WeeklyPlanTemplateDays { get; set; } = new();
+
     #endregion
 }

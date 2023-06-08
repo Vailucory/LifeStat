@@ -6,7 +6,8 @@ public class WeeklyPlanTemplateDL
 
     public string Name { get; set; } = string.Empty;
 
-    public List<DailyPlanTemplateDL> DailyPlansTemplates { get; set; } = new();
+    public List<WeeklyPlanTemplateDayDL> WeeklyPlanTemplateDays { get; set; } = new();
+
 
     #region Navigation Properties
     public UserDL User { get; set; }

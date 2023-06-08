@@ -78,6 +78,10 @@ internal class DataLayerToDomainMappingProfile : Profile
     {
         CreateMap <WeeklyPlanTemplate, WeeklyPlanTemplateDL > ();
 
-        CreateMap<WeeklyPlanTemplateDL, WeeklyPlanTemplate>();
+        CreateMap<WeeklyPlanTemplateDL, WeeklyPlanTemplate>()
+            .ForMember(dest => dest.DailyPlansTemplates, opt => opt
+            .MapFrom(src => src.WeeklyPlanTemplateDays
+            .Select(wptdp => wptdp.DailyPlanTemplate)
+            .ToList()));
     }
 }

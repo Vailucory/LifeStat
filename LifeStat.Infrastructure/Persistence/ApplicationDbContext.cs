@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
     public DbSet<UserDL> InnerUsers { get; set; }
     public DbSet<WeeklyPlanDL> WeeklyPlans { get; set; }
     public DbSet<WeeklyPlanTemplateDL> WeeklyPlanTemplates { get; set; }
+    public DbSet<WeeklyPlanTemplateDayDL> WeeklyPlanTemplateDays { get; set; }
 
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -106,6 +107,19 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, Applicati
             .HasOne(wp => wp.WeeklyPlanTemplate)
             .WithMany(wpt => wpt.WeeklyPlans)
             .HasForeignKey(wp => wp.WeeklyPlanTemplateId);
+
+        #endregion
+
+        #region WeeklyPlanTemplateDayDL
+        modelBuilder.Entity<WeeklyPlanTemplateDayDL>()
+            .HasOne(wptd => wptd.WeeklyPlanTemplate)
+            .WithMany(wpt => wpt.WeeklyPlanTemplateDays)
+            .HasForeignKey(wptd => wptd.WeeklyPlanTemplateId);
+
+        modelBuilder.Entity<WeeklyPlanTemplateDayDL>()
+            .HasOne(wptd => wptd.DailyPlanTemplate)
+            .WithMany(dpt => dpt.WeeklyPlanTemplateDays)
+            .HasForeignKey(wptd => wptd.DailyPlanTemplateId);
 
         #endregion
 
