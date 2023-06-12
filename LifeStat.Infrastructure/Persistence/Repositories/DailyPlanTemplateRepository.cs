@@ -46,7 +46,8 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
     public async Task<Result<DailyPlanTemplate>> GetByIdAsync(int id)
     {
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context.DailyPlanTemplates
-            .FindAsync(id));
+            .AsNoTracking()
+            .FirstOrDefaultAsync(dpt => dpt.Id == id));
 
         if (dailyPlanTemplate == null)
         {
@@ -62,6 +63,7 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context
             .DailyPlanTemplates
             .Include(dpt => dpt.Activities)
+            .AsNoTracking()
             .FirstOrDefaultAsync(dpt => dpt.Id == id));
 
         if (dailyPlanTemplate == null)
@@ -78,6 +80,7 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context
             .DailyPlanTemplates
             .Include(dpt => dpt.DailyPlans)
+            .AsNoTracking()
             .FirstOrDefaultAsync(dpt => dpt.Id == id));
 
         if (dailyPlanTemplate == null)
@@ -95,6 +98,7 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
             _mapper.Map<List<DailyPlanTemplate>>(await _context
                 .DailyPlanTemplates
                 .Where(dpt => dpt.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 

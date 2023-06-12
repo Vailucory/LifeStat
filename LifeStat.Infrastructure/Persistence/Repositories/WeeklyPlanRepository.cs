@@ -55,7 +55,8 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
     public async Task<Result<WeeklyPlan>> GetByIdAsync(int id)
     {
         var weeklyPlan = _mapper.Map<WeeklyPlan>(await _context.WeeklyPlans
-            .FindAsync(id));
+            .AsNoTracking()
+            .FirstOrDefaultAsync(wp => wp.Id == id));
 
         if (weeklyPlan == null)
         {
@@ -75,6 +76,7 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
             .ThenInclude(dp => dp.Activities)
             .Include(wp => wp.DailyPlans)
             .ThenInclude(dp => dp.DailyPlanTemplate)
+            .AsNoTracking()
             .FirstOrDefaultAsync(wp => wp.Id == id));
 
         if (weeklyPlan == null)
@@ -97,6 +99,7 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
                 .Include(wp => wp.DailyPlans)
                 .ThenInclude(dp => dp.DailyPlanTemplate)
                 .Where(wp => wp.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 

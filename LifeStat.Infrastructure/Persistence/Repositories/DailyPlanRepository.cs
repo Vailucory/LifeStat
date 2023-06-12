@@ -52,6 +52,7 @@ public class DailyPlanRepository : IDailyPlanRepository
     {
         var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
             .Include(dp => dp.DailyPlanTemplate)
+            .AsNoTracking()
             .FirstOrDefaultAsync(dp => dp.Id == id));
 
         if (dailyPlan == null)
@@ -68,6 +69,7 @@ public class DailyPlanRepository : IDailyPlanRepository
         var dailyPlanDL = await _context.DailyPlans
             .Include(dp => dp.Activities)
             .Include(dp => dp.DailyPlanTemplate)
+            .AsNoTracking()
             .FirstOrDefaultAsync(dp => dp.Id == id);
 
         if (dailyPlanDL == null)
@@ -88,6 +90,7 @@ public class DailyPlanRepository : IDailyPlanRepository
                 .DailyPlans
                 .Include(dp => dp.DailyPlanTemplate)
                 .Where(dp => dp.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 

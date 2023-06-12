@@ -36,7 +36,8 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
     {
         var activityTemplate = _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
-            .FindAsync(id));
+            .AsNoTracking()
+            .FirstOrDefaultAsync(at => at.Id == id));
 
         if (activityTemplate == null)
         {
@@ -52,6 +53,7 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
         var activityTemplate = _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
             .Include(at => at.Activities)
+            .AsNoTracking()
             .FirstOrDefaultAsync(at => at.Id == id));
 
         if (activityTemplate == null)
@@ -69,6 +71,7 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
             _mapper.Map<List<ActivityTemplate>>(await _context
                 .ActivityTemplates
                 .Where(at => at.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 

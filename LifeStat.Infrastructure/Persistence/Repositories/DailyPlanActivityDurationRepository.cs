@@ -4,6 +4,7 @@ using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Persistence.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace LifeStat.Infrastructure.Persistence.Repositories;
@@ -41,7 +42,8 @@ public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRep
     {
         var dailyPlanActivityDuration = _mapper.Map<DailyPlanActivityDuration>(await _context
             .DailyPlanActivityDurations
-            .FindAsync(id));
+            .AsNoTracking()
+            .FirstOrDefaultAsync(dpad => dpad.Id == id));
 
         if (dailyPlanActivityDuration == null)
         {

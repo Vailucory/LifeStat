@@ -75,7 +75,8 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
     public async Task<Result<WeeklyPlanTemplate>> GetByIdAsync(int id)
     {
         var weeklyPlanTemplate = _mapper.Map<WeeklyPlanTemplate>(await _context.WeeklyPlanTemplates
-            .FindAsync(id));
+            .AsNoTracking()
+            .FirstOrDefaultAsync(wpt => wpt.Id == id));
 
         if (weeklyPlanTemplate == null)
         {

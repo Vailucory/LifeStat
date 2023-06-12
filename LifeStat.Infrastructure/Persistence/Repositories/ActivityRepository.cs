@@ -46,7 +46,7 @@ public class ActivityRepository : IActivityRepository
 
     public async Task<Result<Activity>> GetByIdAsync(int id)
     {
-        var activity = await _context.Activities.FindAsync(id);
+        var activity = await _context.Activities.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
 
         if (activity is null)
         {
@@ -64,6 +64,7 @@ public class ActivityRepository : IActivityRepository
             _mapper.Map<List<Activity>>(await _context
                 .Activities
                 .Where(a => a.UserId == userId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 
@@ -84,6 +85,7 @@ public class ActivityRepository : IActivityRepository
             _mapper.Map<List<Activity>>(await _context
                 .Activities
                 .Where(a => a.ActivityTemplateId == templateId)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 
