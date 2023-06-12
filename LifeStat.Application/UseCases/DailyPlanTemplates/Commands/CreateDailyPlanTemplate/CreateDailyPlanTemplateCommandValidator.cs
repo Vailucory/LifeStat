@@ -15,7 +15,7 @@ public class CreateDailyPlanTemplateCommandValidator : AbstractValidator<CreateD
 
         RuleFor(x => x.ActivityDurations)
             .ForEach(x => x
-            .SetValidator(new DailyPlanActivityDurationValidator()))
+            .SetValidator(new DailyPlanActivityDurationViewModelValidator()))
             .When(x => x.ActivityDurations is not null);
     }
 }

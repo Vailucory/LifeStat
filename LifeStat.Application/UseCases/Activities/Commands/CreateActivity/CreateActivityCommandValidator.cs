@@ -11,12 +11,12 @@ public class CreateActivityCommandValidator : AbstractValidator<CreateActivityCo
 
         RuleFor(x => x.StartTimeLocal)
             .NotEmpty()
-            .GreaterThan(x => x.EndTimeLocal)
+            .LessThan(x => x.EndTimeLocal)
             .GreaterThanOrEqualTo(x => x.StartTimeUtc);
 
         RuleFor(x => x.StartTimeUtc)
             .NotEmpty()
-            .GreaterThan(x => x.EndTimeUtc)
+            .LessThan(x => x.EndTimeUtc)
             .GreaterThanOrEqualTo(x => x.StartTimeUtc);
 
         RuleFor(x => x.EndTimeLocal)

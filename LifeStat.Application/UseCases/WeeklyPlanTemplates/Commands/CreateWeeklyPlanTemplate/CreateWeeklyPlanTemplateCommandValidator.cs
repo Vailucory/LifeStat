@@ -22,7 +22,9 @@ public class CreateWeeklyPlanTemplateCommandValidator : AbstractValidator<Create
             .NotNull()
             .NotEmpty()
             .Must(x => x.Count == 7)
+            .WithMessage(a => $"You must provide 7 Daily Plan Templates instead of {a.DailyPlanTemplates.Count}")
             .ForEach(x => x
-            .SetValidator(new DailyPlanTemplateValidator()));
+            .Must(x => x.Id > 0)
+            .WithMessage("Daily Plan Template Id must be greater than '0'"));
     }
 }
