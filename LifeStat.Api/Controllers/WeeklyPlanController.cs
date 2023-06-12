@@ -1,10 +1,12 @@
 ﻿using LifeStat.Application.UseCases.WeeklyPlans;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/weekly-plans")]
 [ApiController]
+[Authorize]
 public class WeeklyPlanController : ApiControllerBase
 {
     private readonly IMediator _mediator;

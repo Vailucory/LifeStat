@@ -1,5 +1,7 @@
-﻿namespace LifeStat.Application.Interfaces;
+﻿using LifeStat.Domain.Shared;
+
+namespace LifeStat.Application.Interfaces;
 public interface IJwtTokenAuthenticationService
 {
-    Task<string?> Authenticate(string Email, string Password);
+    Task<Result<string>> Authenticate(string Email, string Password);
 }

@@ -1,10 +1,12 @@
 ﻿using LifeStat.Application.UseCases.DailyPlans;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/daily-plans")]
 [ApiController]
+[Authorize]
 public class DailyPlanController : ApiControllerBase
 {
     private readonly IMediator _mediator;

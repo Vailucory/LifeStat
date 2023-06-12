@@ -2,11 +2,13 @@
 using LifeStat.Domain.Shared;
 using LifeStat.Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/users")]
 [ApiController]
+[Authorize]
 public class UserController : ApiControllerBase
 {
     private IMediator _mediator;
@@ -32,7 +34,22 @@ public class UserController : ApiControllerBase
         return HandleResult(result);
     }
 
+    [HttpPost("auth")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Authenticate(AuthenticateUserCommand command)
+    {
+        var result = await _mediator.Send(command);
+
+        if (result.IsSucceeded)
+        {
+
+        }
+
+        return HandleResult(result);
+    }
+
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Register(CreateUserCommand command)
     {
         var result = await _mediator.Send(command);

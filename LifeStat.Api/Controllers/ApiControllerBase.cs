@@ -1,11 +1,14 @@
 ﻿using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LifeStat.Api.Controllers;
 
 public class ApiControllerBase : ControllerBase
 {
+    protected string? UserSid { get => HttpContext.User.FindFirst(ClaimTypes.Sid)?.Value;}
+
     protected IActionResult HandleResult<T>(Result<T> result)
     {
         if (result.IsSucceeded)

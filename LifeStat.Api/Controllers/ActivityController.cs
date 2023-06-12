@@ -1,11 +1,12 @@
 ﻿using LifeStat.Application.UseCases.Activities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
 
 namespace LifeStat.Api.Controllers;
 [Route("api/activities")]
 [ApiController]
+[Authorize]
 public class ActivityController : ApiControllerBase
 {
     private readonly IMediator _mediator;

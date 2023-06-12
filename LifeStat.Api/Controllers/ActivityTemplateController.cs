@@ -1,10 +1,12 @@
 ﻿using LifeStat.Application.UseCases.ActivityTemplates;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/activity-templates")]
 [ApiController]
+[Authorize]
 public class ActivityTemplateController : ApiControllerBase
 {
     private readonly IMediator _mediator;
