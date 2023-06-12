@@ -1,10 +1,11 @@
 ﻿using Domain.Models;
 using LifeStat.Domain.Shared;
+using LifeStat.Domain.ViewModels;
 
 namespace LifeStat.Domain.Interfaces.Repositories;
 public interface IDailyPlanTemplateRepository
 {
-    Result Add(DailyPlanTemplate dailyPlanTemplate, int userId);
+    Result Add(string dailyPlanTemplateName, List<DailyPlanActivityDurationViewModel> activities, int userId);
 
     Task<Result<DailyPlanTemplate>> GetByIdAsync(int id);
 

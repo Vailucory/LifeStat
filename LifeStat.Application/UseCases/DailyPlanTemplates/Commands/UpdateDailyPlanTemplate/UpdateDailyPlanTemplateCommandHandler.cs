@@ -1,4 +1,5 @@
-﻿using LifeStat.Application.Interfaces;
+﻿using Domain.Models;
+using LifeStat.Application.Interfaces;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Interfaces.UnitOfWork;
 using LifeStat.Domain.Shared;
@@ -18,7 +19,19 @@ public class UpdateDailyPlanTemplateCommandHandler : ICommandHandler<UpdateDaily
 
     public async Task<Result> Handle(UpdateDailyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
-        return _dailyPlanTemplateRepository.Update(request.DailyPlanTemplate)
+        DailyPlanTemplate template = new DailyPlanTemplate()
+        {
+            Id = request.DailyPlanTemplateId,
+            Name = request.DailyPlanTemplateName,
+            Activities = request.Activities
+            .Select(dpad => new DailyPlanActivityDuration() 
+            { 
+                Duration = dpad.Duration, 
+                ActivityTemplate = new ActivityTemplate() 
+                { Id = dpad.ActivityTemplateId} 
+            }).ToList(),
+        };
+        return _dailyPlanTemplateRepository.Update(template)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

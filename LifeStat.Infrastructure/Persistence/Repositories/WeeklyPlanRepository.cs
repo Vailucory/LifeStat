@@ -21,20 +21,33 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
 
     public Result Add(WeeklyPlan weeklyPlan, int userId)
     {
-        var user = _context.InnerUsers.Find(userId);
+        var user = _context.InnerUsers
+            .Where(u => u.Id == userId)
+            .Include(u => u.DailyPlans)
+            .FirstOrDefault();
 
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        var dailyPlans = user.DailyPlans.OrderBy(dp => dp.Id).ToList();
-        if (dailyPlans.Count > 7)
-        {
-            dailyPlans = dailyPlans.TakeLast(7).ToList();
-        }
+        var weeklyPlanTemplate = _context.WeeklyPlanTemplates.Where(wpt => wpt.Id == weeklyPlan.WeeklyPlanTemplate.Id).FirstOrDefault();
 
-        weeklyPlan.DailyPlans = _mapper.Map<List<DailyPlan>>(dailyPlans);
+        if (weeklyPlanTemplate is null)
+            return Result.FromError(new EntityNotFoundError(typeof(WeeklyPlanTemplate), weeklyPlan.WeeklyPlanTemplate.Id));
 
-        user.WeeklyPlans.Add(_mapper.Map<WeeklyPlanDL>(weeklyPlan));
+        var dailyPlans = user.DailyPlans.OrderBy(dp => dp.Id).TakeLast(7).Where(dp => dp.WeeklyPlanId is null).ToList();
+
+        if (dailyPlans.Count < 7)
+            return Result.FromError(new Error("Daily Plans", $"Weekly Plan require 7 Daily Plans instead of {dailyPlans.Count}."));
+
+        WeeklyPlanDL weeklyPlanDL = _mapper.Map<WeeklyPlanDL>(weeklyPlan);
+
+        weeklyPlanDL.DailyPlans = dailyPlans;
+
+        weeklyPlanDL.WeeklyPlanTemplate = weeklyPlanTemplate;
+
+        weeklyPlanDL.UserId = user.Id;
+
+        user.WeeklyPlans.Add(weeklyPlanDL);
 
         return Result.Good();
     }
@@ -57,7 +70,11 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
     {
         var weeklyPlan = _mapper.Map<WeeklyPlan>(await _context
             .WeeklyPlans
+            .Include(wp => wp.WeeklyPlanTemplate)
             .Include(wp => wp.DailyPlans)
+            .ThenInclude(dp => dp.Activities)
+            .Include(wp => wp.DailyPlans)
+            .ThenInclude(dp => dp.DailyPlanTemplate)
             .FirstOrDefaultAsync(wp => wp.Id == id));
 
         if (weeklyPlan == null)
@@ -74,6 +91,11 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
         return Result<List<WeeklyPlan>>.Good(
             _mapper.Map<List<WeeklyPlan>>(await _context
                 .WeeklyPlans
+                .Include(wp => wp.WeeklyPlanTemplate)
+                .Include(wp => wp.DailyPlans)
+                .ThenInclude(dp => dp.Activities)
+                .Include(wp => wp.DailyPlans)
+                .ThenInclude(dp => dp.DailyPlanTemplate)
                 .Where(wp => wp.UserId == userId)
                 .ToListAsync()));
     }

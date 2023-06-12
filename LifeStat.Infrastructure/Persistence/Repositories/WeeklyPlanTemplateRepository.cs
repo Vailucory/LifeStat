@@ -21,13 +21,53 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
 
     public Result Add(WeeklyPlanTemplate weeklyPlanTemplate, int userId)
     {
+        var dailyPlanTemplatesIds = weeklyPlanTemplate.DailyPlansTemplates.Select(dpt => dpt.Id).ToList();
+
+        if (dailyPlanTemplatesIds.Count != 7)
+        {
+            return Result.FromError(
+                new Error("Daily Plan Templates", $"Daily Plan Templates count must be 7 instead of {dailyPlanTemplatesIds.Count}."));
+        }
+
         var user = _context.InnerUsers.Find(userId);
 
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
+        var dailyPlanTemplates = _context.DailyPlanTemplates
+            .Where(dpt => dailyPlanTemplatesIds.Contains(dpt.Id) && dpt.UserId == userId).ToList();
+
+        if (dailyPlanTemplates is null || dailyPlanTemplates.Count != dailyPlanTemplatesIds.Distinct().Count())
+        {
+            var retrievedIds = dailyPlanTemplates?.Select(dpt => dpt.Id)?.ToList() ?? new List<int>();
+
+            var notFoundIds = dailyPlanTemplatesIds.Where(dptid => !retrievedIds.Contains(dptid)).ToList();
+
+            var errors = notFoundIds.Select(id => new EntityNotFoundError(typeof(DailyPlanTemplate), id));
+
+            return Result.FromErrors(errors);
+        }
+
+        var weeklyPlanTemplateDays = new List<WeeklyPlanTemplateDayDL>();
+
+        for (int i = 1; i <= 7; i++)
+        {
+            weeklyPlanTemplateDays.Add(new WeeklyPlanTemplateDayDL()
+            {
+                DayOfWeek = (DayOfWeek)(i != 7 ? i : 0),
+                DailyPlanTemplateId= dailyPlanTemplatesIds[i-1]
+            });
+
+        }
+
+        var weeklyPlanTemplateDL = _mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate);
+
+        weeklyPlanTemplateDL.WeeklyPlanTemplateDays = weeklyPlanTemplateDays;
+
+        weeklyPlanTemplateDL.UserId = userId;
+
         user.WeeklyPlanTemplates
-            .Add(_mapper.Map<WeeklyPlanTemplateDL>(weeklyPlanTemplate));
+            .Add(weeklyPlanTemplateDL);
 
         return Result.Good();
     }
@@ -50,8 +90,11 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
     {
         var weeklyPlanTemplate = _mapper.Map<WeeklyPlanTemplate>(await _context
             .WeeklyPlanTemplates
-            .Include(wpt => wpt.DailyPlansTemplates)
-            .FirstOrDefaultAsync(wpt => wpt.Id == id));
+            .Where(wpt => wpt.Id == id)
+            .Include(wpt => wpt.WeeklyPlanTemplateDays)
+            .ThenInclude(wptd => wptd.DailyPlanTemplate)
+            .AsNoTracking()
+            .FirstOrDefaultAsync());
 
         if (weeklyPlanTemplate == null)
         {
@@ -69,6 +112,9 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
             _mapper.Map<List<WeeklyPlanTemplate>>(await _context
                 .WeeklyPlanTemplates
                 .Where(wpt => wpt.UserId == userId)
+                .Include(wpt => wpt.WeeklyPlanTemplateDays)
+                .ThenInclude(wptd => wptd.DailyPlanTemplate)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 
@@ -81,7 +127,10 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
 
     public Result Update(WeeklyPlanTemplate weeklyPlanTemplate)
     {
-        var entity = _context.WeeklyPlanTemplates.Find(weeklyPlanTemplate.Id);
+        var entity = _context.WeeklyPlanTemplates
+            .Where(wpt => wpt.Id == weeklyPlanTemplate.Id)
+            .Include(wpt => wpt.WeeklyPlanTemplateDays)
+            .FirstOrDefault();
 
         if (entity == null)
         {
@@ -89,21 +138,18 @@ internal class WeeklyPlanTemplateRepository : IWeeklyPlanTemplateRepository
                 new EntityNotFoundError(typeof(WeeklyPlanTemplate), weeklyPlanTemplate.Id));
         }
 
-        entity.Name = weeklyPlanTemplate.Name;
+        entity.Name = string.IsNullOrWhiteSpace(weeklyPlanTemplate.Name) ? entity.Name : weeklyPlanTemplate.Name;
 
         if (weeklyPlanTemplate.DailyPlansTemplates != null)
         {
-            var zipped = weeklyPlanTemplate.DailyPlansTemplates.Zip(entity.DailyPlansTemplates);
+            var zipped = weeklyPlanTemplate.DailyPlansTemplates.Zip(entity.WeeklyPlanTemplateDays);
 
             foreach (var pair in zipped)
             {
-                DailyPlanTemplateDL dbPlanTemplate = pair.Second;
+                WeeklyPlanTemplateDayDL weeklyPlanTemplateDay = pair.Second;
                 DailyPlanTemplate inPlanTemplate = pair.First;
 
-                dbPlanTemplate.Id = inPlanTemplate.Id;
-
-                dbPlanTemplate.Name = inPlanTemplate.Name;
-
+                weeklyPlanTemplateDay.DailyPlanTemplateId = inPlanTemplate.Id;
             }
         }
 

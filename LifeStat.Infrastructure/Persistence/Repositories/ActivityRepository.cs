@@ -28,7 +28,18 @@ public class ActivityRepository : IActivityRepository
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        user.Activities.Add(_mapper.Map<ActivityDL>(activity));
+        var activityTemplate = _context.ActivityTemplates.Find(activity.Template.Id);
+
+        if (activityTemplate is null)
+            return Result.FromError(new EntityNotFoundError(typeof(ActivityTemplate), activity.Template.Id));
+
+        var activityDL = _mapper.Map<ActivityDL>(activity);
+
+        activityDL.Template = activityTemplate;
+
+        activityDL.UserId = userId;
+
+        user.Activities.Add(activityDL);
 
         return Result.Good();
     }
@@ -61,7 +72,9 @@ public class ActivityRepository : IActivityRepository
         return Result<List<Activity>>.Good(
             _mapper.Map<List<Activity>>(await _context
                 .Activities
+                .Include(a => a.Template)
                 .Where(a => a.UserId == userId && a.StartTimeLocal >= fromTime)
+                .AsNoTracking()
                 .ToListAsync()));
     }
 

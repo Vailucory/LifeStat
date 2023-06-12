@@ -3,8 +3,10 @@ using Domain.Models;
 using LifeStat.Domain.Interfaces.Repositories;
 using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
+using LifeStat.Domain.ViewModels;
 using LifeStat.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace LifeStat.Infrastructure.Persistence.Repositories;
 public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
@@ -19,15 +21,24 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         _mapper = mapper;
     }
 
-    public Result Add(DailyPlanTemplate dailyPlanTemplate, int userId)
+    public Result Add(string dailyPlanTemplateName, List<DailyPlanActivityDurationViewModel> activities, int userId)
     {
         var user = _context.InnerUsers.Find(userId);
 
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        user.DailyPlanTemplates
-            .Add(_mapper.Map<DailyPlanTemplateDL>(dailyPlanTemplate));
+        DailyPlanTemplateDL dailyPlanTemplate = new DailyPlanTemplateDL() {
+            Name = dailyPlanTemplateName,
+            UserId = user.Id,
+            Activities = activities.Select(dpad => new DailyPlanActivityDurationDL()
+            {
+                ActivityTemplateId = dpad.ActivityTemplateId,
+                Duration = dpad.Duration
+            }).ToList(),
+        };
+
+        _context.DailyPlanTemplates.Add(dailyPlanTemplate);
 
         return Result.Good();
     }
@@ -121,8 +132,6 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
                 dbActivity.Duration = inActivity.Duration;
 
                 dbActivity.ActivityTemplateId = inActivity.ActivityTemplate.Id;
-
-                dbActivity.DailyPlanTemplateId = inActivity.DailyPlanTemplate.Id;
             }
         }
 

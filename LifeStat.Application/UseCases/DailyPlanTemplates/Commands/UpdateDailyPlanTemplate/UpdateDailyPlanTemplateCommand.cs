@@ -1,7 +1,7 @@
-﻿using Domain.Models;
-using LifeStat.Application.Interfaces;
+﻿using LifeStat.Application.Interfaces;
+using LifeStat.Domain.ViewModels;
 
 namespace LifeStat.Application.UseCases.DailyPlanTemplates;
-public record UpdateDailyPlanTemplateCommand(DailyPlanTemplate DailyPlanTemplate) : ICommand
+public record UpdateDailyPlanTemplateCommand(int DailyPlanTemplateId, string DailyPlanTemplateName, List<DailyPlanActivityDurationViewModel> Activities) : ICommand
 {
 }

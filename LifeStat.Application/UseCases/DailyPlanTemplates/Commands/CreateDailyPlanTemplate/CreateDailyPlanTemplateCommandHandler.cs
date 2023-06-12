@@ -19,13 +19,8 @@ public class CreateDailyPlanTemplateCommandHandler : ICommandHandler<CreateDaily
 
     public async Task<Result> Handle(CreateDailyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
-        var dailyPlanTemplate = new DailyPlanTemplate()
-        {
-            Name = request.Name,
-            Activities = request.ActivityDurations
-        };
-
-        return _dailyPlanTemplateRepository.Add(dailyPlanTemplate, request.UserId)
+        throw new Exception("Test");
+        return _dailyPlanTemplateRepository.Add(request.Name, request.ActivityDurations, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

@@ -26,8 +26,24 @@ public class DailyPlanRepository : IDailyPlanRepository
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        user.DailyPlans
-            .Add(_mapper.Map<DailyPlanDL>(dailyPlan));
+        var template = _context.DailyPlanTemplates.Find(dailyPlan.DailyPlanTemplate.Id);
+
+        if (template is null)
+            return Result.FromError(new EntityNotFoundError(typeof(DailyPlanTemplate), dailyPlan.DailyPlanTemplate.Id));
+
+        var activityIds = dailyPlan.Activities.Select(a => a.Id).ToList();
+
+        var activities = _context.Activities.Where(a => activityIds.Contains(a.Id)).ToList();
+
+        var dailyPlanDL = _mapper.Map<DailyPlanDL>(dailyPlan);
+
+        dailyPlanDL.DailyPlanTemplate = template;
+
+        dailyPlanDL.Activities = activities;
+
+        dailyPlanDL.UserId = user.Id;
+
+        user.DailyPlans.Add(dailyPlanDL);
 
         return Result.Good();
     }
@@ -35,7 +51,8 @@ public class DailyPlanRepository : IDailyPlanRepository
     public async Task<Result<DailyPlan>> GetByIdAsync(int id)
     {
         var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
-            .FindAsync(id));
+            .Include(dp => dp.DailyPlanTemplate)
+            .FirstOrDefaultAsync(dp => dp.Id == id));
 
         if (dailyPlan == null)
         {
@@ -48,15 +65,18 @@ public class DailyPlanRepository : IDailyPlanRepository
 
     public async Task<Result<DailyPlan>> GetByIdWithActivitiesAsync(int id)
     {
-        var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
+        var dailyPlanDL = await _context.DailyPlans
             .Include(dp => dp.Activities)
-            .FirstOrDefaultAsync(dp => dp.Id == id));
+            .Include(dp => dp.DailyPlanTemplate)
+            .FirstOrDefaultAsync(dp => dp.Id == id);
 
-        if (dailyPlan == null)
+        if (dailyPlanDL == null)
         {
             return Result<DailyPlan>.FromError(
                 new EntityNotFoundError(typeof(DailyPlan), id));
         }
+
+        var dailyPlan = _mapper.Map<DailyPlan>(dailyPlanDL);
 
         return Result<DailyPlan>.Good(dailyPlan);
     }
@@ -66,6 +86,7 @@ public class DailyPlanRepository : IDailyPlanRepository
         return Result<List<DailyPlan>>.Good(
             _mapper.Map<List<DailyPlan>>(await _context
                 .DailyPlans
+                .Include(dp => dp.DailyPlanTemplate)
                 .Where(dp => dp.UserId == userId)
                 .ToListAsync()));
     }
