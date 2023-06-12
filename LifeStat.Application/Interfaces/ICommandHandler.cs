@@ -9,6 +9,5 @@ public interface ICommandHandler<TRequest> : IRequestHandler<TRequest, Result>
 
 public interface ICommandHandler<TRequest, TResponse> : IRequestHandler<TRequest, Result<TResponse>>
     where TRequest : ICommand<TResponse>
-    where TResponse : new()
 {
 }

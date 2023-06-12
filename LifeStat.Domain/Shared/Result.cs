@@ -41,7 +41,7 @@ public class Result
 }
 
 
-public class Result<T> : Result where T : new()
+public class Result<T> : Result 
 {
     private Result(T value)
     {
@@ -55,22 +55,22 @@ public class Result<T> : Result where T : new()
 
     public new static Result<T> FromErrors(IEnumerable<Error> errors)
     {
-        return new Result<T>(new T(), errors.ToArray());
+        return new Result<T>(default(T)!, errors.ToArray());
     }
 
     public static Result<T> FromErrors(T? value, IEnumerable<Error> errors)
     {
-        return new Result<T>(value ?? new T(), errors.ToArray());
+        return new Result<T>(value ?? default(T)!, errors.ToArray());
     }
 
     public new static Result<T> FromError(Error error)
     {
-        return new Result<T>(new T(), new Error[] { error });
+        return new Result<T>(default(T)!, new Error[] { error });
     }
 
     public static Result<T> FromError(T? value, Error error)
     {
-        return new Result<T>(value ?? new T(), new Error[] { error });
+        return new Result<T>(value ?? default(T)!, new Error[] { error });
     }
 
     public static Result<T> Good(T value)

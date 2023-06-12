@@ -6,7 +6,7 @@ namespace LifeStat.Api.Controllers;
 
 public class ApiControllerBase : ControllerBase
 {
-    protected IActionResult HandleResult<T>(Result<T> result) where T: new()
+    protected IActionResult HandleResult<T>(Result<T> result)
     {
         if (result.IsSucceeded)
         {

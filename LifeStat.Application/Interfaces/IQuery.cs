@@ -2,6 +2,6 @@
 using MediatR;
 
 namespace LifeStat.Application.Interfaces;
-public interface IQuery<TResponse> : IRequest<Result<TResponse>> where TResponse : new()
+public interface IQuery<TResponse> : IRequest<Result<TResponse>>
 {
 }
