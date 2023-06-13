@@ -15,6 +15,6 @@ public class GetActivitiesByTemplateIdQueryHandler : IQueryHandler<GetActivities
 
     public async Task<Result<List<Activity>>> Handle(GetActivitiesByTemplateIdQuery request, CancellationToken cancellationToken)
     {
-        return await _activityRepository.GetActivitiesByTemplateIdAsync(request.TemplateId);
+        return await _activityRepository.GetActivitiesByTemplateIdAsync(request.TemplateId, request.UserId);
     }
 }

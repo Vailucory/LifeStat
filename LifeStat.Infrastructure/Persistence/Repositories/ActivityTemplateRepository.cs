@@ -32,34 +32,34 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
         return Result.Good();
     }
 
-    public async Task<Result<ActivityTemplate>> GetByIdAsync(int id)
+    public async Task<Result<ActivityTemplate>> GetByIdAsync(int id, int userId)
     {
         var activityTemplate = _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
             .AsNoTracking()
-            .FirstOrDefaultAsync(at => at.Id == id));
+            .FirstOrDefaultAsync(at => at.Id == id && at.UserId == userId));
 
         if (activityTemplate == null)
         {
             return Result<ActivityTemplate>.FromError(
-                new EntityNotFoundError(typeof(Activity), id));
+                new EntityNotFoundError(typeof(ActivityTemplate), id));
         }
 
         return Result<ActivityTemplate>.Good(activityTemplate);
     }
 
-    public async Task<Result<ActivityTemplate>> GetByIdWithActivitiesAsync(int id)
+    public async Task<Result<ActivityTemplate>> GetByIdWithActivitiesAsync(int id, int userId)
     {
         var activityTemplate = _mapper.Map<ActivityTemplate>(await _context
             .ActivityTemplates
             .Include(at => at.Activities)
             .AsNoTracking()
-            .FirstOrDefaultAsync(at => at.Id == id));
+            .FirstOrDefaultAsync(at => at.Id == id && at.UserId == userId));
 
         if (activityTemplate == null)
         {
             return Result<ActivityTemplate>.FromError(
-                new EntityNotFoundError(typeof(Activity), id));
+                new EntityNotFoundError(typeof(ActivityTemplate), id));
         }
 
         return Result<ActivityTemplate>.Good(activityTemplate);
@@ -75,16 +75,24 @@ public class ActivityTemplateRepository : IActivityTemplateRepository
                 .ToListAsync()));
     }
 
-    public Result Remove(ActivityTemplate activityTemplate)
+    public Result Remove(ActivityTemplate activityTemplate, int userId)
     {
-        _context.ActivityTemplates.Remove(_mapper.Map<ActivityTemplateDL>(activityTemplate));
+        var activityTemplateDL = _context.ActivityTemplates
+            .FirstOrDefault(at => at.Id == activityTemplate.Id && at.UserId == userId);
+
+        if (activityTemplateDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(ActivityTemplate), activityTemplate.Id));
+
+        _context.ActivityTemplates.Remove(activityTemplateDL);
 
         return Result.Good();
     }
 
-    public Result Update(ActivityTemplate activityTemplate)
+    public Result Update(ActivityTemplate activityTemplate, int userId)
     {
-        var entity = _context.ActivityTemplates.Find(activityTemplate.Id);
+        var entity = _context.ActivityTemplates
+            .FirstOrDefault( at => at.Id == activityTemplate.Id && at.UserId == userId);
 
         if (entity == null)
         {

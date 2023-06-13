@@ -2,6 +2,6 @@
 using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.ActivityTemplates;
-public record GetActivityTemplateQuery(int Id) : IQuery<ActivityTemplate>
+public record GetActivityTemplateQuery(int Id, int UserId) : IQuery<ActivityTemplate>
 {
 }

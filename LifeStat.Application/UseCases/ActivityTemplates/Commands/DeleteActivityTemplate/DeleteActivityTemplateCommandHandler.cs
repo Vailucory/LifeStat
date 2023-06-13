@@ -19,8 +19,8 @@ public class DeleteActivityTemplateCommandHandler : ICommandHandler<DeleteActivi
 
     public async Task<Result> Handle(DeleteActivityTemplateCommand request, CancellationToken cancellationToken)
     {
-        //TODO: Handle properly cascade deletion and do not allow to delete if template used in DailyPlan templates 
-        return _activityTemplateRepository.Remove(new ActivityTemplate() { Id = request.ActivityTemplateId})
+        return _activityTemplateRepository
+            .Remove(new ActivityTemplate() { Id = request.ActivityTemplateId}, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

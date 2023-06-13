@@ -1,4 +1,5 @@
 ﻿using LifeStat.Application.UseCases.Activities;
+using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class ActivityController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
-    public ActivityController(IMediator mediator)
+    public ActivityController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
@@ -19,32 +20,62 @@ public class ActivityController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateActivity(CreateActivityCommand command)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            command = command with { UserId = userIdResult.Value };
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("template/{templateId}")]
     public async Task<IActionResult> GetActivitiesByTemplateId(int templateId)
     {
-        var result = await _mediator.Send(new GetActivitiesByTemplateIdQuery(templateId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetActivitiesByTemplateIdQuery(templateId, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetActivity(int id)
     {
-        var result = await _mediator.Send(new GetActivityQuery(id));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetActivityQuery(id, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllUserActivities(int userId)
+    [HttpGet("user")]
+    public async Task<IActionResult> GetAllUserActivities()
     {
-        var result = await _mediator.Send(new GetAllUserActivitiesQuery(userId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetAllUserActivitiesQuery(userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 }

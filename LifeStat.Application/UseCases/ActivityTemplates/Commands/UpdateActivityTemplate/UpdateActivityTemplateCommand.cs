@@ -2,6 +2,6 @@
 using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.ActivityTemplates;
-public record UpdateActivityTemplateCommand(ActivityTemplate ActivityTemplate) : ICommand
+public record UpdateActivityTemplateCommand(ActivityTemplate ActivityTemplate, int UserId) : ICommand
 {
 }

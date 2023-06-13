@@ -26,7 +26,8 @@ public class DailyPlanRepository : IDailyPlanRepository
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        var template = _context.DailyPlanTemplates.Find(dailyPlan.DailyPlanTemplate.Id);
+        var template = _context.DailyPlanTemplates
+            .FirstOrDefault(dp => dp.Id == dailyPlan.DailyPlanTemplate.Id && dp.UserId == userId);
 
         if (template is null)
             return Result.FromError(new EntityNotFoundError(typeof(DailyPlanTemplate), dailyPlan.DailyPlanTemplate.Id));
@@ -48,12 +49,12 @@ public class DailyPlanRepository : IDailyPlanRepository
         return Result.Good();
     }
 
-    public async Task<Result<DailyPlan>> GetByIdAsync(int id)
+    public async Task<Result<DailyPlan>> GetByIdAsync(int id, int userId)
     {
         var dailyPlan = _mapper.Map<DailyPlan>(await _context.DailyPlans
             .Include(dp => dp.DailyPlanTemplate)
             .AsNoTracking()
-            .FirstOrDefaultAsync(dp => dp.Id == id));
+            .FirstOrDefaultAsync(dp => dp.Id == id && dp.UserId == userId));
 
         if (dailyPlan == null)
         {
@@ -64,13 +65,13 @@ public class DailyPlanRepository : IDailyPlanRepository
         return Result<DailyPlan>.Good(dailyPlan);
     }
 
-    public async Task<Result<DailyPlan>> GetByIdWithActivitiesAsync(int id)
+    public async Task<Result<DailyPlan>> GetByIdWithActivitiesAsync(int id, int userId)
     {
         var dailyPlanDL = await _context.DailyPlans
             .Include(dp => dp.Activities)
             .Include(dp => dp.DailyPlanTemplate)
             .AsNoTracking()
-            .FirstOrDefaultAsync(dp => dp.Id == id);
+            .FirstOrDefaultAsync(dp => dp.Id == id && dp.UserId == userId);
 
         if (dailyPlanDL == null)
         {
@@ -94,16 +95,24 @@ public class DailyPlanRepository : IDailyPlanRepository
                 .ToListAsync()));
     }
 
-    public Result Remove(DailyPlan dailyPlan)
+    public Result Remove(DailyPlan dailyPlan, int userId)
     {
-        _context.DailyPlans.Remove(_mapper.Map<DailyPlanDL>(dailyPlan));
+        var dailyPlanDL = _context.DailyPlans
+            .FirstOrDefault(dp => dp.Id == dailyPlan.Id && dp.UserId == userId);
+
+        if (dailyPlanDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlan), dailyPlan.Id));
+
+        _context.DailyPlans.Remove(dailyPlanDL);
 
         return Result.Good();
     }
 
-    public Result Update(DailyPlan dailyPlan)
+    public Result Update(DailyPlan dailyPlan, int userId)
     {
-        var entity = _context.DailyPlans.Find(dailyPlan.Id);
+        var entity = _context.DailyPlans
+            .FirstOrDefault(dp => dp.Id == dailyPlan.Id && dp.UserId == userId);
 
         if (entity == null)
         {

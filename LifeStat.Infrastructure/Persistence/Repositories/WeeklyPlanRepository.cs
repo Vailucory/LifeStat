@@ -29,7 +29,8 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
         if (user is null)
             return Result.FromError(new UserNotFoundError(userId));
 
-        var weeklyPlanTemplate = _context.WeeklyPlanTemplates.Where(wpt => wpt.Id == weeklyPlan.WeeklyPlanTemplate.Id).FirstOrDefault();
+        var weeklyPlanTemplate = _context.WeeklyPlanTemplates
+            .FirstOrDefault(wpt => wpt.Id == weeklyPlan.WeeklyPlanTemplate.Id && wpt.UserId == userId);
 
         if (weeklyPlanTemplate is null)
             return Result.FromError(new EntityNotFoundError(typeof(WeeklyPlanTemplate), weeklyPlan.WeeklyPlanTemplate.Id));
@@ -52,11 +53,11 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
         return Result.Good();
     }
 
-    public async Task<Result<WeeklyPlan>> GetByIdAsync(int id)
+    public async Task<Result<WeeklyPlan>> GetByIdAsync(int id, int userId)
     {
         var weeklyPlan = _mapper.Map<WeeklyPlan>(await _context.WeeklyPlans
             .AsNoTracking()
-            .FirstOrDefaultAsync(wp => wp.Id == id));
+            .FirstOrDefaultAsync(wp => wp.Id == id && wp.UserId == userId));
 
         if (weeklyPlan == null)
         {
@@ -67,7 +68,7 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
         return Result<WeeklyPlan>.Good(weeklyPlan);
     }
 
-    public async Task<Result<WeeklyPlan>> GetByIdWithDailyPlansAsync(int id)
+    public async Task<Result<WeeklyPlan>> GetByIdWithDailyPlansAsync(int id, int userId)
     {
         var weeklyPlan = _mapper.Map<WeeklyPlan>(await _context
             .WeeklyPlans
@@ -77,7 +78,7 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
             .Include(wp => wp.DailyPlans)
             .ThenInclude(dp => dp.DailyPlanTemplate)
             .AsNoTracking()
-            .FirstOrDefaultAsync(wp => wp.Id == id));
+            .FirstOrDefaultAsync(wp => wp.Id == id && wp.UserId == userId));
 
         if (weeklyPlan == null)
         {
@@ -103,16 +104,24 @@ public class WeeklyPlanRepository : IWeeklyPlanRepository
                 .ToListAsync()));
     }
 
-    public Result Remove(WeeklyPlan weeklyPlan)
+    public Result Remove(WeeklyPlan weeklyPlan, int userId)
     {
-        _context.WeeklyPlans.Remove(_mapper.Map<WeeklyPlanDL>(weeklyPlan));
+        var weeklyPlanDL = _context.WeeklyPlans
+            .FirstOrDefault(dpt => dpt.Id == weeklyPlan.Id && dpt.UserId == userId);
+
+        if (weeklyPlanDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(WeeklyPlan), weeklyPlan.Id));
+
+        _context.WeeklyPlans.Remove(weeklyPlanDL);
 
         return Result.Good();
     }
 
-    public Result Update(WeeklyPlan weeklyPlan)
+    public Result Update(WeeklyPlan weeklyPlan, int userId)
     {
-        var entity = _context.WeeklyPlans.Find(weeklyPlan.Id);
+        var entity = _context.WeeklyPlans
+            .FirstOrDefault(wp => wp.Id == weeklyPlan.Id && wp.UserId == userId);
 
         if (entity == null)
         {

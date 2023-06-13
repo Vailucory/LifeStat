@@ -6,13 +6,13 @@ public interface IActivityTemplateRepository
 {
     Result Add(ActivityTemplate activityTemplate, int userId);
 
-    Task<Result<ActivityTemplate>> GetByIdAsync(int id);
+    Task<Result<ActivityTemplate>> GetByIdAsync(int id, int userId);
 
-    Task<Result<ActivityTemplate>> GetByIdWithActivitiesAsync(int id);
+    Task<Result<ActivityTemplate>> GetByIdWithActivitiesAsync(int id, int userId);
 
     Task<Result<List<ActivityTemplate>>> GetAllUserActivityTemplatesAsync(int userId);
 
-    Result Update(ActivityTemplate activityTemplate);
+    Result Update(ActivityTemplate activityTemplate, int userId);
 
-    Result Remove(ActivityTemplate activityTemplate);
+    Result Remove(ActivityTemplate activityTemplate, int userId);
 }

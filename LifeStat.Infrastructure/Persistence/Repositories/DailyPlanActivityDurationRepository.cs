@@ -5,7 +5,6 @@ using LifeStat.Domain.Shared;
 using LifeStat.Domain.Shared.Errors;
 using LifeStat.Infrastructure.Persistence.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 namespace LifeStat.Infrastructure.Persistence.Repositories;
 public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRepository
@@ -20,25 +19,41 @@ public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRep
         _mapper = mapper;
     }
 
-    public Result Add(DailyPlanActivityDuration dailyPlanActivityDuration)
+    public Result Add(DailyPlanActivityDuration dailyPlanActivityDuration, int userId)
     {
-        _context.DailyPlanActivityDurations
-            .Add(_mapper
-            .Map<DailyPlanActivityDurationDL>(dailyPlanActivityDuration));
+        var user = _context.InnerUsers
+            .Include(u => u.ActivityTemplates)
+            .Include(u => u.DailyPlanTemplates)
+            .FirstOrDefault(x => x.Id == userId);
+
+        if (user is null)
+            return Result.FromError(new UserNotFoundError(userId));
+
+        var activityTemplate = user.ActivityTemplates
+            .FirstOrDefault(at => at.UserId == userId && at.Id == dailyPlanActivityDuration.ActivityTemplate.Id);
+
+        if (activityTemplate is null)
+            return Result.FromError(new EntityNotFoundError(typeof(ActivityTemplate), dailyPlanActivityDuration.ActivityTemplate.Id));
+        
+
+        var dailyPlanTemplate = user.DailyPlanTemplates
+            .FirstOrDefault(dpt => dpt.UserId == userId && dpt.Id == dailyPlanActivityDuration.DailyPlanTemplate.Id);
+
+        if (dailyPlanTemplate is null)
+            return Result.FromError(new EntityNotFoundError(typeof(DailyPlanTemplate), dailyPlanActivityDuration.DailyPlanTemplate.Id));
+
+        var dailyPlanActivityDurationDL = _mapper.Map<DailyPlanActivityDurationDL>(dailyPlanActivityDuration);
+
+        dailyPlanActivityDurationDL.DailyPlanTemplate = dailyPlanTemplate;
+
+        dailyPlanActivityDurationDL.ActivityTemplate = activityTemplate;
+
+        _context.DailyPlanActivityDurations.Add(dailyPlanActivityDurationDL);
 
         return Result.Good();
     }
 
-    public Result AddRange(IEnumerable<DailyPlanActivityDuration> dailyPlanActivityDurations)
-    {
-        _context.DailyPlanActivityDurations
-            .AddRange(_mapper
-            .Map<IEnumerable<DailyPlanActivityDurationDL>>(dailyPlanActivityDurations));
-
-        return Result.Good();
-    }
-
-    public async Task<Result<DailyPlanActivityDuration>> GetByIdAsync(int id)
+    public async Task<Result<DailyPlanActivityDuration>> GetByIdAsync(int id, int userId)
     {
         var dailyPlanActivityDuration = _mapper.Map<DailyPlanActivityDuration>(await _context
             .DailyPlanActivityDurations
@@ -54,18 +69,33 @@ public class DailyPlanActivityDurationRepository : IDailyPlanActivityDurationRep
         return Result<DailyPlanActivityDuration>.Good(dailyPlanActivityDuration);
     }
 
-    public Result Remove(DailyPlanActivityDuration dailyPlanActivityDuration)
+    public Result Remove(DailyPlanActivityDuration dailyPlanActivityDuration, int userId)
     {
+        var dailyPlanActivityDurationDL = _context.DailyPlanActivityDurations
+            .Include(dpad => dpad.DailyPlanTemplate)
+            .Include(dpad => dpad.ActivityTemplate)
+            .FirstOrDefault(dpad => dpad.Id == dailyPlanActivityDuration.Id
+                && dpad.ActivityTemplate.UserId == userId
+                && dpad.DailyPlanTemplate.UserId == userId);
+
+        if (dailyPlanActivityDurationDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlanActivityDurationDL), dailyPlanActivityDuration.Id));
+
         _context.DailyPlanActivityDurations
-            .Remove(_mapper
-            .Map<DailyPlanActivityDurationDL>(dailyPlanActivityDuration));
+            .Remove(dailyPlanActivityDurationDL);
 
         return Result.Good();
     }
 
-    public Result Update(DailyPlanActivityDuration dailyPlanActivityDuration)
+    public Result Update(DailyPlanActivityDuration dailyPlanActivityDuration, int userId)
     {
-        var entity = _context.DailyPlanActivityDurations.Find(dailyPlanActivityDuration.Id);
+        var entity = _context.DailyPlanActivityDurations
+            .Include(dpad => dpad.DailyPlanTemplate)
+            .Include(dpad => dpad.ActivityTemplate)
+            .FirstOrDefault(dpad => dpad.Id == dailyPlanActivityDuration.Id 
+                && dpad.ActivityTemplate.UserId == userId 
+                && dpad.DailyPlanTemplate.UserId == userId);
 
         if (entity == null)
         {

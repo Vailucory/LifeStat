@@ -15,6 +15,6 @@ public class GetActivityQueryHandler : IQueryHandler<GetActivityQuery, Activity>
 
     public async Task<Result<Activity>> Handle(GetActivityQuery request, CancellationToken cancellationToken)
     {
-        return await _activityRepository.GetByIdAsync(request.Id);
+        return await _activityRepository.GetByIdAsync(request.Id, request.UserId);
     }
 }

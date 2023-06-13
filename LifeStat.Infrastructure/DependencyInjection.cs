@@ -94,6 +94,8 @@ public static class DependencyInjection
 
         services.AddScoped<IIdentityService, IdentityService>();
 
+        services.AddScoped<ICurrentUserIdProvider, CurrentUserIdProvider>();
+
         #endregion
 
         return services;

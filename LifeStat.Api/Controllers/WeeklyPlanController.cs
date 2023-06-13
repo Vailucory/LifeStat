@@ -1,4 +1,5 @@
 ﻿using LifeStat.Application.UseCases.WeeklyPlans;
+using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class WeeklyPlanController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
-    public WeeklyPlanController(IMediator mediator)
+    public WeeklyPlanController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
@@ -19,24 +20,47 @@ public class WeeklyPlanController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateWeeklyPlan(CreateWeeklyPlanCommand command)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            command = command with { UserId = userIdResult.Value };
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetWeeklyPlan(int id)
     {
-        var result = await _mediator.Send(new GetWeeklyPlanQuery(id));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetWeeklyPlanQuery(id, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllUserWeeklyPlans(int userId)
+    [HttpGet("user")]
+    public async Task<IActionResult> GetAllUserWeeklyPlans()
     {
-        var result = await _mediator.Send(new GetAllUserWeeklyPlansQuery(userId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetAllUserWeeklyPlansQuery(userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 }

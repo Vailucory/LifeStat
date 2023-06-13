@@ -1,4 +1,5 @@
 ﻿using LifeStat.Application.UseCases.DailyPlanTemplates;
+using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class DailyPlanTemplateController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
-    public DailyPlanTemplateController(IMediator mediator)
+    public DailyPlanTemplateController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
@@ -19,40 +20,81 @@ public class DailyPlanTemplateController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateDailyPlanTemplate(CreateDailyPlanTemplateCommand command)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            command = command with { UserId = userIdResult.Value };
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteDailyPlanTemplate(DeleteDailyPlanTemplateCommand command)
+    public async Task<IActionResult> DeleteDailyPlanTemplate(int id)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var command = new DeleteDailyPlanTemplateCommand(id, userIdResult.Value);
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpPatch]
     public async Task<IActionResult> UpdateDailyPlanTemplate(UpdateDailyPlanTemplateCommand command)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            command = command with { UserId = userIdResult.Value };
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDailyPlanTemplate(int id)
     {
-        var result = await _mediator.Send(new GetDailyPlanTemplateQuery(id));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetDailyPlanTemplateQuery(id, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllUserDailyPlanTemplates(int userId)
+    [HttpGet("user")]
+    public async Task<IActionResult> GetAllUserDailyPlanTemplates()
     {
-        var result = await _mediator.Send(new GetAllUserDailyPlanTemplatesQuery(userId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetAllUserDailyPlanTemplatesQuery(userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 }

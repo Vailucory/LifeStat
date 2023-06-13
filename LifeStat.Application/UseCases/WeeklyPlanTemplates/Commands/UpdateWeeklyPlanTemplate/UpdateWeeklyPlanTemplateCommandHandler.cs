@@ -18,7 +18,7 @@ public class UpdateWeeklyPlanTemplateCommandHandler : ICommandHandler<UpdateWeek
 
     public async Task<Result> Handle(UpdateWeeklyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
-        return _weeklyPlanTemplateRepository.Update(request.WeeklyPlanTemplate)
+        return _weeklyPlanTemplateRepository.Update(request.WeeklyPlanTemplate, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

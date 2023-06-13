@@ -31,7 +31,7 @@ public class UpdateDailyPlanTemplateCommandHandler : ICommandHandler<UpdateDaily
                 { Id = dpad.ActivityTemplateId} 
             }).ToList(),
         };
-        return _dailyPlanTemplateRepository.Update(template)
+        return _dailyPlanTemplateRepository.Update(template, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

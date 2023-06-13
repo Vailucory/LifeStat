@@ -1,4 +1,7 @@
-﻿using LifeStat.Application.UseCases.ActivityTemplates;
+﻿using Domain.Enums;
+using Domain.Models;
+using LifeStat.Application.UseCases.ActivityTemplates;
+using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,48 +14,89 @@ public class ActivityTemplateController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
-    public ActivityTemplateController(IMediator mediator)
+    public ActivityTemplateController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateActivityTemplate(CreateActivityTemplateCommand command)
+    public async Task<IActionResult> CreateActivityTemplate(string name, ActivityType activityType)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var command = new CreateActivityTemplateCommand(userIdResult.Value, name, activityType);
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteActivityTemplate(DeleteActivityTemplateCommand command)
+    public async Task<IActionResult> DeleteActivityTemplate(int activityTemplateId)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var command = new DeleteActivityTemplateCommand(activityTemplateId, userIdResult.Value);
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpPatch]
-    public async Task<IActionResult> UpdateActivityTemplate(UpdateActivityTemplateCommand command)
+    public async Task<IActionResult> UpdateActivityTemplate(ActivityTemplate activityTemplate)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var command = new UpdateActivityTemplateCommand(activityTemplate, userIdResult.Value);
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetActivityTemplate(int id)
     {
-        var result = await _mediator.Send(new GetActivityTemplateQuery(id));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetActivityTemplateQuery(id, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllUserActivityTemplates(int userId)
+    [HttpGet("user")]
+    public async Task<IActionResult> GetAllUserActivityTemplates()
     {
-        var result = await _mediator.Send(new GetAllUserActivityTemplatesQuery(userId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetAllUserActivityTemplatesQuery(userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 }

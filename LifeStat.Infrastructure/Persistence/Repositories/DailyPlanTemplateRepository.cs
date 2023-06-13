@@ -43,11 +43,11 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         return Result.Good();
     }
 
-    public async Task<Result<DailyPlanTemplate>> GetByIdAsync(int id)
+    public async Task<Result<DailyPlanTemplate>> GetByIdAsync(int id, int userId)
     {
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context.DailyPlanTemplates
             .AsNoTracking()
-            .FirstOrDefaultAsync(dpt => dpt.Id == id));
+            .FirstOrDefaultAsync(dpt => dpt.Id == id && dpt.UserId == userId));
 
         if (dailyPlanTemplate == null)
         {
@@ -58,13 +58,13 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         return Result<DailyPlanTemplate>.Good(dailyPlanTemplate);
     }
 
-    public async Task<Result<DailyPlanTemplate>> GetByIdWithActivityDurationsAsync(int id)
+    public async Task<Result<DailyPlanTemplate>> GetByIdWithActivityDurationsAsync(int id, int userId)
     {
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context
             .DailyPlanTemplates
             .Include(dpt => dpt.Activities)
             .AsNoTracking()
-            .FirstOrDefaultAsync(dpt => dpt.Id == id));
+            .FirstOrDefaultAsync(dpt => dpt.Id == id && dpt.UserId == userId));
 
         if (dailyPlanTemplate == null)
         {
@@ -75,13 +75,13 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
         return Result<DailyPlanTemplate>.Good(dailyPlanTemplate);
     }
 
-    public async Task<Result<DailyPlanTemplate>> GetByIdWithDailyPlansAsync(int id)
+    public async Task<Result<DailyPlanTemplate>> GetByIdWithDailyPlansAsync(int id, int userId)
     {
         var dailyPlanTemplate = _mapper.Map<DailyPlanTemplate>(await _context
             .DailyPlanTemplates
             .Include(dpt => dpt.DailyPlans)
             .AsNoTracking()
-            .FirstOrDefaultAsync(dpt => dpt.Id == id));
+            .FirstOrDefaultAsync(dpt => dpt.Id == id && dpt.UserId == userId));
 
         if (dailyPlanTemplate == null)
         {
@@ -102,19 +102,25 @@ public class DailyPlanTemplateRepository : IDailyPlanTemplateRepository
                 .ToListAsync()));
     }
 
-    public Result Remove(DailyPlanTemplate dailyPlanTemplate)
+    public Result Remove(DailyPlanTemplate dailyPlanTemplate, int userId)
     {
-        _context.DailyPlanTemplates.Remove(_mapper.Map<DailyPlanTemplateDL>(dailyPlanTemplate));
+        var dailyPlanTemplateDL = _context.DailyPlanTemplates
+            .FirstOrDefault(dpt => dpt.Id == dailyPlanTemplate.Id && dpt.UserId == userId);
+
+        if (dailyPlanTemplateDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(DailyPlanTemplate), dailyPlanTemplate.Id));
+
+        _context.DailyPlanTemplates.Remove(dailyPlanTemplateDL);
 
         return Result.Good();
     }
     
-    public Result Update(DailyPlanTemplate dailyPlanTemplate)
+    public Result Update(DailyPlanTemplate dailyPlanTemplate, int userId)
     {
         var entity = _context.DailyPlanTemplates
             .Include(dpt => dpt.Activities)
-            .Where(dpt => dpt.Id == dailyPlanTemplate.Id)
-            .FirstOrDefault();
+            .FirstOrDefault(dpt => dpt.Id == dailyPlanTemplate.Id && dpt.UserId == userId);
 
         if (entity == null)
         {

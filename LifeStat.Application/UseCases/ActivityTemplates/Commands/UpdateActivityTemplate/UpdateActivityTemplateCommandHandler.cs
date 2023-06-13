@@ -18,7 +18,7 @@ public class UpdateActivityTemplateCommandHandler : ICommandHandler<UpdateActivi
 
     public async Task<Result> Handle(UpdateActivityTemplateCommand request, CancellationToken cancellationToken)
     {
-        return _activityTemplateRepository.Update(request.ActivityTemplate)
+        return _activityTemplateRepository.Update(request.ActivityTemplate, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

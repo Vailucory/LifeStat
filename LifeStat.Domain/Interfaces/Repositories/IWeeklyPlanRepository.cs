@@ -6,14 +6,14 @@ public interface IWeeklyPlanRepository
 {
     Result Add(WeeklyPlan weeklyPlan, int userId);
 
-    Task<Result<WeeklyPlan>> GetByIdAsync(int id);
+    Task<Result<WeeklyPlan>> GetByIdAsync(int id, int userId);
 
-    Task<Result<WeeklyPlan>> GetByIdWithDailyPlansAsync(int id);
+    Task<Result<WeeklyPlan>> GetByIdWithDailyPlansAsync(int id, int userId);
 
     Task<Result<List<WeeklyPlan>>> GetAllUserWeeklyPlansAsync(int userId);
 
-    Result Update(WeeklyPlan weeklyPlan);
+    Result Update(WeeklyPlan weeklyPlan, int userId);
 
-    Result Remove(WeeklyPlan weeklyPlan);
+    Result Remove(WeeklyPlan weeklyPlan, int userId);
 }
 

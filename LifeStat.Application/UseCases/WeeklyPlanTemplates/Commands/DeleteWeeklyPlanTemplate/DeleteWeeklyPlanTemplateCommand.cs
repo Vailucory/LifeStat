@@ -1,6 +1,6 @@
 ﻿using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.WeeklyPlanTemplates;
-public record DeleteWeeklyPlanTemplateCommand(int Id) : ICommand
+public record DeleteWeeklyPlanTemplateCommand(int Id, int UserId) : ICommand
 {
 }

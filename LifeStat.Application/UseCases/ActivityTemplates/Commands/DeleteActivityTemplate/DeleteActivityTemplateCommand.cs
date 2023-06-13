@@ -1,6 +1,6 @@
 ﻿using LifeStat.Application.Interfaces;
 
 namespace LifeStat.Application.UseCases.ActivityTemplates;
-public record DeleteActivityTemplateCommand(int ActivityTemplateId) : ICommand
+public record DeleteActivityTemplateCommand(int ActivityTemplateId, int UserId) : ICommand
 {
 }

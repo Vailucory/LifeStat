@@ -20,7 +20,7 @@ public class DeleteDailyPlanTemplateCommandHandler : ICommandHandler<DeleteDaily
     public async Task<Result> Handle(DeleteDailyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
         //TODO: Handle properly cascade deletion and do not allow to delete if template used in WeeklyPlan templates 
-       return _dailyPlanTemplateRepository.Remove(new DailyPlanTemplate { Id = request.Id, })
+       return _dailyPlanTemplateRepository.Remove(new DailyPlanTemplate { Id = request.Id }, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

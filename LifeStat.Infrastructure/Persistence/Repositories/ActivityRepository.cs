@@ -44,9 +44,9 @@ public class ActivityRepository : IActivityRepository
         return Result.Good();
     }
 
-    public async Task<Result<Activity>> GetByIdAsync(int id)
+    public async Task<Result<Activity>> GetByIdAsync(int id, int userId)
     {
-        var activity = await _context.Activities.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id);
+        var activity = await _context.Activities.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id && a.UserId == userId);
 
         if (activity is null)
         {
@@ -79,26 +79,32 @@ public class ActivityRepository : IActivityRepository
                 .ToListAsync()));
     }
 
-    public async Task<Result<List<Activity>>> GetActivitiesByTemplateIdAsync(int templateId)
+    public async Task<Result<List<Activity>>> GetActivitiesByTemplateIdAsync(int templateId, int userId)
     {
         return Result<List<Activity>>.Good(
             _mapper.Map<List<Activity>>(await _context
                 .Activities
-                .Where(a => a.ActivityTemplateId == templateId)
+                .Where(a => a.ActivityTemplateId == templateId && a.UserId == userId)
                 .AsNoTracking()
                 .ToListAsync()));
     }
 
-    public Result Remove(Activity activity)
+    public Result Remove(Activity activity, int userId)
     {
+        var activityDL = _context.Activities.FirstOrDefault(a => a.Id == activity.Id && a.UserId == userId);
+
+        if (activityDL is null)
+            return Result.FromError(
+                new EntityNotFoundError(typeof(Activity), activity.Id));
+
         _context.Activities.Remove(_mapper.Map<ActivityDL>(activity));
 
         return Result.Good();
     }
 
-    public Result Update(Activity activity)
+    public Result Update(Activity activity, int userId)
     {
-        var entity = _context.Activities.Find(activity.Id);
+        var entity = _context.Activities.FirstOrDefault(a => a.Id == activity.Id && a.UserId == userId);
 
         if (entity == null)
         {

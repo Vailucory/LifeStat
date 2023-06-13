@@ -1,5 +1,6 @@
 ﻿using LifeStat.Application.UseCases.Users;
 using LifeStat.Domain.Shared;
+using LifeStat.Domain.ViewModels;
 using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,23 +14,27 @@ public class UserController : ApiControllerBase
 {
     private IMediator _mediator;
 
-    public UserController(IMediator mediator)
+    public UserController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
 
     [HttpPost("change-password")]
-    public async Task<IActionResult> ChangePassword(ChangePasswordCommand command)
+    public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel changePasswordViewModel)
     {
-        var result = await _mediator.Send(command);
+        var result = await _mediator
+            .Send(new ChangePasswordCommand(
+                Guid.Parse(UserSid!), 
+                changePasswordViewModel.CurrentPassword, 
+                changePasswordViewModel.NewPassword));
 
         return HandleResult(result);
     }
 
     [HttpPost("change-username")]
-    public async Task<IActionResult> ChangeUsername(ChangeUserNameCommand command)
+    public async Task<IActionResult> ChangeUsername(string newUserName)
     {
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(new ChangeUserNameCommand(Guid.Parse(UserSid!), newUserName));
 
         return HandleResult(result);
     }
@@ -39,11 +44,6 @@ public class UserController : ApiControllerBase
     public async Task<IActionResult> Authenticate(AuthenticateUserCommand command)
     {
         var result = await _mediator.Send(command);
-
-        if (result.IsSucceeded)
-        {
-
-        }
 
         return HandleResult(result);
     }
@@ -58,9 +58,9 @@ public class UserController : ApiControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeleteUser(DeleteUserCommand command)
+    public async Task<IActionResult> DeleteUser()
     {
-        var result = await _mediator.Send(command);
+        var result = await _mediator.Send(new DeleteUserCommand(Guid.Parse(UserSid!)));
 
         return HandleResult(result);
     }
@@ -83,12 +83,4 @@ public class UserController : ApiControllerBase
 
         return StatusCode(StatusCodes.Status500InternalServerError);
     }
-
-    //[HttpGet]
-    //public async Task<IActionResult> GetByEmail(string email)
-    //{
-    //    var result = await _mediator.Send(new GetUserByEmailQuery(email));
-
-    //    return HandleResult(result);
-    //}
 }

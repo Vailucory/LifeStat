@@ -20,7 +20,7 @@ public class DeleteWeeklyPlanTemplateCommandHandler : ICommandHandler<DeleteWeek
     public async Task<Result> Handle(DeleteWeeklyPlanTemplateCommand request, CancellationToken cancellationToken)
     {
         //TODO: Handle properly cascade deletion
-        return _weeklyPlanTemplateRepository.Remove(new WeeklyPlanTemplate() { Id = request.Id })
+        return _weeklyPlanTemplateRepository.Remove(new WeeklyPlanTemplate() { Id = request.Id }, request.UserId)
             .MergeFrom(await _unitOfWork.SaveChangesAsync(cancellationToken));
     }
 }

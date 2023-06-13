@@ -1,4 +1,5 @@
 ﻿using LifeStat.Application.UseCases.DailyPlans;
+using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,7 @@ public class DailyPlanController : ApiControllerBase
 {
     private readonly IMediator _mediator;
 
-    public DailyPlanController(IMediator mediator)
+    public DailyPlanController(IMediator mediator, ICurrentUserIdProvider currentUserIdProvider) : base(currentUserIdProvider)
     {
         _mediator = mediator;
     }
@@ -19,24 +20,47 @@ public class DailyPlanController : ApiControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateDailyPlan(CreateDailyPlanCommand command)
     {
-        var result = await _mediator.Send(command);
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            command = command with { UserId = userIdResult.Value };
+
+            var result = await _mediator.Send(command);
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetDailyPlan(int id)
     {
-        var result = await _mediator.Send(new GetDailyPlanQuery(id));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetDailyPlanQuery(id, userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 
-    [HttpGet("user/{userId}")]
-    public async Task<IActionResult> GetAllUserDailyPlans(int userId)
+    [HttpGet("user")]
+    public async Task<IActionResult> GetAllUserDailyPlans()
     {
-        var result = await _mediator.Send(new GetAllUserDailyPlansQuery(userId));
+        var userIdResult = UserId;
 
-        return HandleResult(result);
+        if (userIdResult.IsSucceeded)
+        {
+            var result = await _mediator.Send(new GetAllUserDailyPlansQuery(userIdResult.Value));
+
+            return HandleResult(result);
+        }
+
+        return HandleResult(userIdResult);
     }
 }

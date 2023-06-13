@@ -15,6 +15,6 @@ public class GetWeeklyPlanQueryHandler : IQueryHandler<GetWeeklyPlanQuery, Weekl
 
     public async Task<Result<WeeklyPlan>> Handle(GetWeeklyPlanQuery request, CancellationToken cancellationToken)
     {
-        return await _weeklyPlanRepository.GetByIdWithDailyPlansAsync(request.Id);
+        return await _weeklyPlanRepository.GetByIdWithDailyPlansAsync(request.Id, request.UserId);
     }
 }
