@@ -1,11 +1,10 @@
 ﻿using Domain.Enums;
 using Domain.Models;
+using LifeStat.Api.Services;
 using LifeStat.Application.UseCases.ActivityTemplates;
-using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/activity-templates")]
@@ -16,10 +15,9 @@ public class ActivityTemplateController : ApiControllerBase
     private readonly IMediator _mediator;
 
     public ActivityTemplateController(
-        IMediator mediator, 
-        ICurrentUserIdProvider currentUserIdProvider, 
-        IMemoryCache cache) 
-        : base(currentUserIdProvider, cache)
+        IMediator mediator,
+        CurrentUserIdService currentUserIdService)
+        : base(currentUserIdService)
     {
         _mediator = mediator;
     }

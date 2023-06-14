@@ -1,9 +1,8 @@
-﻿using LifeStat.Application.UseCases.DailyPlans;
-using LifeStat.Infrastructure.Identity;
+﻿using LifeStat.Api.Services;
+using LifeStat.Application.UseCases.DailyPlans;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/daily-plans")]
@@ -14,10 +13,9 @@ public class DailyPlanController : ApiControllerBase
     private readonly IMediator _mediator;
 
     public DailyPlanController(
-        IMediator mediator, 
-        ICurrentUserIdProvider currentUserIdProvider, 
-        IMemoryCache cache) 
-        : base(currentUserIdProvider, cache)
+        IMediator mediator,
+        CurrentUserIdService currentUserIdService)
+        : base(currentUserIdService)
     {
         _mediator = mediator;
     }

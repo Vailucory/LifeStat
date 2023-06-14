@@ -1,9 +1,8 @@
-﻿using LifeStat.Application.UseCases.Activities;
-using LifeStat.Infrastructure.Identity;
+﻿using LifeStat.Api.Services;
+using LifeStat.Application.UseCases.Activities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/activities")]
@@ -15,9 +14,8 @@ public class ActivityController : ApiControllerBase
 
     public ActivityController(
         IMediator mediator, 
-        ICurrentUserIdProvider currentUserIdProvider, 
-        IMemoryCache cache) 
-        : base(currentUserIdProvider, cache)
+        CurrentUserIdService currentUserIdService) 
+        : base(currentUserIdService)
     {
         _mediator = mediator;
     }

@@ -1,5 +1,6 @@
 using LifeStat.Api.Converters;
 using LifeStat.Api.Middlewares;
+using LifeStat.Api.Services;
 using LifeStat.Application;
 using LifeStat.Infrastructure;
 using Microsoft.OpenApi.Models;
@@ -46,6 +47,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
+builder.Services.AddTransient<CurrentUserIdService>();
 builder.Services.AddMemoryCache();
 
 var app = builder.Build();

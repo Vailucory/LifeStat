@@ -1,11 +1,11 @@
-﻿using LifeStat.Application.UseCases.Users;
+﻿using LifeStat.Api.Services;
+using LifeStat.Application.UseCases.Users;
 using LifeStat.Domain.Shared;
 using LifeStat.Domain.ViewModels;
 using LifeStat.Infrastructure.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace LifeStat.Api.Controllers;
 [Route("api/users")]
@@ -16,10 +16,9 @@ public class UserController : ApiControllerBase
     private IMediator _mediator;
 
     public UserController(
-        IMediator mediator, 
-        ICurrentUserIdProvider currentUserIdProvider, 
-        IMemoryCache cache) 
-        : base(currentUserIdProvider, cache)
+        IMediator mediator,
+        CurrentUserIdService currentUserIdService)
+        : base(currentUserIdService)
     {
         _mediator = mediator;
     }
