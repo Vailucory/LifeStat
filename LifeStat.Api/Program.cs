@@ -2,7 +2,6 @@ using LifeStat.Api.Converters;
 using LifeStat.Api.Middlewares;
 using LifeStat.Application;
 using LifeStat.Infrastructure;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,6 @@ var configuration = new ConfigurationBuilder()
     .Build();
 
 
-// Add services to the container.
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(configuration);
@@ -48,12 +46,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddTransient<GlobalExceptionHandlerMiddleware>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
 app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
